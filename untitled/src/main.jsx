@@ -1,0 +1,32 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App.jsx';
+import './index.css';
+import {createBrowserRouter,RouterProvider} from "react-router-dom";
+import Error from './pages/Error.jsx';
+import Expenses from "./pages/Expenses.jsx";
+import Income from "./pages/Income.jsx";
+
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <App />,
+        errorElement: <Error />
+    },
+    {
+        path: '/expenses',
+        element: <Expenses />,
+        errorElement: <Error />
+    },
+    {
+        path: '/incomes',
+        element: <Income />,
+        errorElement: <Error />
+    }
+])
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+    <React.StrictMode>
+        <RouterProvider router={router} />
+    </React.StrictMode>
+);
