@@ -1,28 +1,52 @@
 import React, {useEffect, useState} from 'react';
 import Sidebar from "../components/Sidebar.jsx";
-import ExpensesTable from "../components/ExpensesTable.jsx";
-import AddExpenseForm from "../components/AddExpenseForm.jsx";
-import CardExpenses from "../components/CardExpenses.jsx";
+import ExpensesTable from "../components/expense/ExpensesTable.jsx";
+import AddExpenseForm from "../components/expense/AddExpenseForm.jsx";
+import CardExpenses from "../components/expense/CardExpenses.jsx";
 import Footer from "../components/Footer.jsx";
+import axios from "axios";
+import DeleteAlert from "../components/DeleteAlert.jsx";
 
 
 function Expenses(props) {
 
     //api call to get all expenses
-    const [expenses, setExpenses] = useState([
-        {id: 1, description: 'Groceries', amount: 150, category: 'Food', date: '2024-09-12'},
-        {id: 2, description: 'Gas', amount: 60, category: 'Transportation', date: '2024-09-15'},
-        {id: 3, description: 'Rent', amount: 800, category: 'Housing', date: '2024-09-01'}
-    ]);//res from api call
-    // useEffect(() => {
-    //     fetch("/api/expenses").then((response) => {
-    //         return response.json();
-    //     }).then((data) => {
-    //         expenses = data;
-    //     }).catch((error) => {
-    //         console.log(error);
-    //     })
-    // }, []);
+    const [expenses, setExpenses] = useState([]);
+    const [totalExpense, setTotalExpense] = useState(0);
+    const [totalIncome, setTotalIncome] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [isDelete, setIsDelete] = useState(false);
+    const [idToDel, setIdToDel] = useState();
+
+
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                setIsLoading(true);
+                const res = await axios.get('http://localhost:8080/getAllExpenses');
+                setExpenses(res.data.allExpenses);
+                console.log(res.data);
+                setTotalExpense(res.data.totalExpenses);
+                setTotalIncome(res.data.totalIncome);
+            } catch (error) {
+                setIsError(true);
+                console.log(error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        fetchTransactions();
+    }, [])
+
+    if (isError) {
+        return <div>Error</div>;
+    }
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
 
     function addExpense(expense) {
         expense.id = expense.length;
@@ -31,31 +55,63 @@ function Expenses(props) {
         //insert into db table
     }
 
+    function handleEdit(e) {
+
+    }
+
+    function handleDeleteSubmit(transactionId) {
+        setIsDelete(true);
+        setIdToDel(transactionId);
+    }
+
+    function handleDeleteConfirmation(confirmation) {
+        if (confirmation) {
+            //api call to del
+            //refresh useEffect
+        }
+
+        setIsDelete(false);
+    }
+
     return (
-        <div className="flex flex-row h-auto">
-            {/* Sidebar on the left */}
-            <Sidebar className="w-64"/>
+        <div className="drawer drawer-end">
+            <input id="my-drawer" type="checkbox" className="drawer-toggle"/>
+            <div className="flex flex-row h-auto drawer-content">
+                {/* Sidebar on the left */}
+                <Sidebar className="w-64"/>
 
-            {/* Main content (Expenses) takes up the remaining space */}
-            <div className="flex-grow p-6">
-                <div className="flex justify-center items-center gap-10 mt-10">
-                    <div className="">
-                        <h1 className="text-3xl font-bold mb-6 text-center">Expenses</h1>
-                        <CardExpenses/>
+                {/* Main content (Expenses) takes up the remaining space */}
+                <div className="flex-grow p-6">
+                    <div className="flex justify-center items-center gap-10 mt-10">
+                        <div className="">
+                            <h1 className="text-3xl font-bold mb-6 text-center">Expenses</h1>
+                            <CardExpenses amount={totalExpense} income={totalIncome}/>
+                        </div>
+
+                        <div className="grow bg-slate-800 rounded-md p-2">
+                            <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400">Enter a new
+                                expense:</p>
+                            {<AddExpenseForm addExpense={addExpense}/>}
+                        </div>
+
                     </div>
 
-                    <div className="grow bg-slate-800 rounded-md p-2">
-                        <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400">Enter a new
-                            expense:</p>
-                        {<AddExpenseForm addExpense={addExpense}/>}
+                    <div className="card bg-base-100 shadow-xl my-14">
+                        <ExpensesTable expenses={expenses} onEdit={handleEdit} onDelete={handleDeleteSubmit}/>
                     </div>
+                    <Footer/>
 
+                    {isDelete ? <DeleteAlert onPress={handleDeleteConfirmation}/> : null}
                 </div>
+            </div>
 
-                <div className="card bg-base-100 shadow-xl my-14">
-                    {<ExpensesTable expenses={expenses}/>}
+            <div className="drawer-side">
+                <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
+                <div className="bg-base-300 min-h-full w-6/12 p-4">
+                        <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400 mt-10">Enter the new
+                            expense data:</p>
+                        <AddExpenseForm addExpense={addExpense}/>
                 </div>
-                <Footer/>
             </div>
         </div>
     );
