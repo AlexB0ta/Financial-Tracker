@@ -6,6 +6,7 @@ import CardExpenses from "../components/expense/CardExpenses.jsx";
 import Footer from "../components/Footer.jsx";
 import axios from "axios";
 import DeleteAlert from "../components/DeleteAlert.jsx";
+import EditExpenseForm from "../components/expense/EditExpenseForm.jsx";
 
 
 function Expenses(props) {
@@ -18,6 +19,8 @@ function Expenses(props) {
     const [isError, setIsError] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
     const [idToDel, setIdToDel] = useState();
+    const [dataRefresh, setDataRefresh] = useState(false);
+    const [expToEdit, setExpToEdit] = useState({});
 
 
     useEffect(() => {
@@ -38,7 +41,7 @@ function Expenses(props) {
         }
 
         fetchTransactions();
-    }, [])
+    }, [dataRefresh])
 
     if (isError) {
         return <div>Error</div>;
@@ -48,15 +51,22 @@ function Expenses(props) {
         return <div>Loading...</div>;
     }
 
-    function addExpense(expense) {
-        expense.id = expense.length;
-        setExpenses((prevExpenses) => [...prevExpenses, expense]);
-        //console.log(expense);
+    async function addExpense(expense) {
+        console.log(expense);
         //insert into db table
+        try {
+            const res = await axios.post('http://localhost:8080/addExpense', expense);
+            console.log(res);
+            //verify res.status and alert fail/completed on left side
+        }
+        catch (err){
+            console.log(err);
+        }
+        setDataRefresh(!dataRefresh);
     }
 
-    function handleEdit(e) {
-
+    function handleEdit(expense) {
+        setExpToEdit((prevVal) =>{return {...prevVal,expense};})
     }
 
     function handleDeleteSubmit(transactionId) {
@@ -68,10 +78,23 @@ function Expenses(props) {
         if (confirmation) {
             //api call to del
             //refresh useEffect
+            const sendDelete = async () => {
+                try {
+                    const res = await axios.delete(`http://localhost:8080/deleteExpense/${idToDel}`);
+                    console.log(res);
+                    //verify res.status and alert fail/completed on left side
+                }catch(err){
+                    console.log(err);
+                }
+            }
+
+            sendDelete();
+            setDataRefresh(!dataRefresh);
         }
 
         setIsDelete(false);
     }
+
 
     return (
         <div className="drawer drawer-end">
@@ -110,7 +133,7 @@ function Expenses(props) {
                 <div className="bg-base-300 min-h-full w-6/12 p-4">
                         <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400 mt-10">Enter the new
                             expense data:</p>
-                        <AddExpenseForm addExpense={addExpense}/>
+                        <EditExpenseForm editExpense={handleEdit} expense={expToEdit}/>
                 </div>
             </div>
         </div>

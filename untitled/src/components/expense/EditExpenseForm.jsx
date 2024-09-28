@@ -2,21 +2,17 @@ import React, {useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck} from "@fortawesome/free-solid-svg-icons";
 
-function AddExpenseForm(props) {
-
-    const [description, setDescription] = useState("");
-    const [amount, setAmount] = useState(0);
-    const [category, setCategory] = useState("");
-    const [date, setDate] = useState("");
+function EditExpenseForm(props) {
+    console.log(props.expense.expense);
+    const [description, setDescription] = useState(props.expense.description);
+    const [amount, setAmount] = useState(props.expense.amount);
+    const [category, setCategory] = useState(props.expense.category);
+    const [date, setDate] = useState(props.expense.date);
 
     function handleSubmit(e) {
         e.preventDefault();
-        if (!description || !amount || !category || !date) {
-            alert("Please fill out all fields");
-            return;
-        }
 
-        props.addExpense({description, amount, category, date});
+        props.editExpense({description, amount, category, date});
         setDescription("");
         setAmount(0);
         setCategory("");
@@ -30,7 +26,7 @@ function AddExpenseForm(props) {
             <div>
                 <label className="form-control w-full">
                     <div className="label">
-                        <span className="label-text">What is your expense description?</span>
+                        <span className="label-text">What is your new expense description?</span>
                     </div>
                     <input
                         type="text"
@@ -81,7 +77,7 @@ function AddExpenseForm(props) {
             <div>
                 <label className="form-control w-full">
                     <div className="label">
-                        <span className="label-text">What is your expense date?</span>
+                        <span className="label-text">What is your new expense date?</span>
                     </div>
                     <input
                         type="date"
@@ -97,7 +93,7 @@ function AddExpenseForm(props) {
                     className="btn btn-wide bg-blue-500 text-white font-bold py-2 px-4 rounded-lg "
                     onMouseEnter={(e) => setMouseOver(true)}
                     onMouseLeave={(e) => setMouseOver(false)}
-                >Add Expense
+                >Edit Expense
                     {isMouseOver && <FontAwesomeIcon icon={faCheck}/>}
 
                 </button>
@@ -106,4 +102,4 @@ function AddExpenseForm(props) {
     );
 }
 
-export default AddExpenseForm;
+export default EditExpenseForm;

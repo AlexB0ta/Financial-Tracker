@@ -108,7 +108,24 @@ app.get('/getAllExpenses', async (req, res) => {
     res.status(200).send(obj);
 })
 
-app.post('/', (req, res) => {})
+app.delete('/deleteExpense/:id', async (req, res) => {
+    //console.log(req.params);
+    const response = await supabase
+        .from('Transactions')
+        .delete()
+        .eq('id', req.params.id)
+
+    return res.status(response.status).send();
+})
+
+app.post('/addExpense', async(req, res) => {
+    //console.log(req.body);
+    const response = await supabase
+        .from('Transactions')
+        .insert({description: req.body.description,amount: req.body.amount,category:req.body.category,created_at:req.body.date,type: 'expense'})
+
+    return res.status(response.status).send();
+})
 
 app.listen(8080, function(err){
     if (err) console.log("Error in server setup")

@@ -24,7 +24,7 @@ function ExpensesTable(props) {
                 <tbody>
                 {props.expenses.length > 0 ? props.expenses.map((expense, index) => (
                     <tr key={index} className="hover:bg-gray-800">
-                        <th>{index + 1}</th>
+                        <th>{index + 1}</th>            {/*different from actual id in DATABASE*/}
                         <td>{expense.description}</td>
                         <td>{expense.amount}</td>
                         <td>{expense.category}</td>

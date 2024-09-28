@@ -43,6 +43,7 @@ function Income(props) {
 
     function addIncome(income) {
         income.id = income.length;
+        //console.log(income)
         setIncomes((prevIncomes) => [...prevIncomes, income]);
     }
 
