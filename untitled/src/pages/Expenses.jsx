@@ -7,6 +7,10 @@ import Footer from "../components/Footer.jsx";
 import axios from "axios";
 import DeleteAlert from "../components/DeleteAlert.jsx";
 import EditExpenseForm from "../components/expense/EditExpenseForm.jsx";
+import ErrorAlert from "../components/alerts/errorAlert.jsx";
+import SuccessAlert from "../components/alerts/successAlert.jsx";
+import Loading from "../pages/Loading.jsx";
+import ErrorFetching from "../pages/ErrorFetching.jsx";
 
 
 function Expenses(props) {
@@ -20,7 +24,9 @@ function Expenses(props) {
     const [isDelete, setIsDelete] = useState(false);
     const [idToDel, setIdToDel] = useState();
     const [dataRefresh, setDataRefresh] = useState(false);
-    const [expToEdit, setExpToEdit] = useState({});
+    const [expToEdit, setExpToEdit] = useState(null);
+    const [isSuccessAddEdit, setIsSuccessAddEdit] = useState(false);
+    const [isErrorAddEdit, setIsErrorAddEdit] = useState(false);
 
 
     useEffect(() => {
@@ -44,29 +50,47 @@ function Expenses(props) {
     }, [dataRefresh])
 
     if (isError) {
-        return <div>Error</div>;
+        return <ErrorFetching />;
     }
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <Loading />;
     }
 
     async function addExpense(expense) {
-        console.log(expense);
+        //console.log(expense);
         //insert into db table
         try {
+            setIsErrorAddEdit(false);
             const res = await axios.post('http://localhost:8080/addExpense', expense);
-            console.log(res);
-            //verify res.status and alert fail/completed on left side
-        }
-        catch (err){
+            setIsSuccessAddEdit(true);
+        } catch (err) {
+            setIsErrorAddEdit(true);
+            setIsSuccessAddEdit(false);
             console.log(err);
         }
         setDataRefresh(!dataRefresh);
     }
 
     function handleEdit(expense) {
-        setExpToEdit((prevVal) =>{return {...prevVal,expense};})
+        //console.log(expense)
+        setExpToEdit(expense);
+        //console.log(expToEdit);
+    }
+
+    async function submitEdit(newExpense) {
+        try {
+            setIsErrorAddEdit(false);
+            const res = await axios.patch('http://localhost:8080/updateExpense', newExpense);
+            setIsSuccessAddEdit(true);
+        } catch (err) {
+            setIsErrorAddEdit(true);
+            setIsSuccessAddEdit(false);
+            console.log(err);
+        }
+
+        setDataRefresh(!dataRefresh);
+
     }
 
     function handleDeleteSubmit(transactionId) {
@@ -83,7 +107,8 @@ function Expenses(props) {
                     const res = await axios.delete(`http://localhost:8080/deleteExpense/${idToDel}`);
                     console.log(res);
                     //verify res.status and alert fail/completed on left side
-                }catch(err){
+                } catch (err) {
+                    //setIsError(true);
                     console.log(err);
                 }
             }
@@ -106,15 +131,20 @@ function Expenses(props) {
                 {/* Main content (Expenses) takes up the remaining space */}
                 <div className="flex-grow p-6">
                     <div className="flex justify-center items-center gap-10 mt-10">
-                        <div className="">
-                            <h1 className="text-3xl font-bold mb-6 text-center">Expenses</h1>
+                        <div className="flex flex-col gap-10">
+                            {isSuccessAddEdit ? <SuccessAlert onClose={() => {setIsSuccessAddEdit(false)}}/> : null}
+                            {isErrorAddEdit ? <ErrorAlert onClose={() => {setIsErrorAddEdit(false)}}/> : null}
+                            <h1 className="text-3xl font-bold text-center">Expenses</h1>
                             <CardExpenses amount={totalExpense} income={totalIncome}/>
                         </div>
 
-                        <div className="grow bg-slate-800 rounded-md p-2">
-                            <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400">Enter a new
-                                expense:</p>
-                            {<AddExpenseForm addExpense={addExpense}/>}
+                        <div className="flex flex-col grow">
+                            <div className="bg-slate-800 rounded-md p-2">
+                                <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400">Enter a
+                                    new
+                                    expense:</p>
+                                {<AddExpenseForm addExpense={addExpense}/>}
+                            </div>
                         </div>
 
                     </div>
@@ -126,16 +156,20 @@ function Expenses(props) {
 
                     {isDelete ? <DeleteAlert onPress={handleDeleteConfirmation}/> : null}
                 </div>
+
             </div>
 
-            <div className="drawer-side">
-                <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                <div className="bg-base-300 min-h-full w-6/12 p-4">
-                        <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400 mt-10">Enter the new
+            {expToEdit !== null ?
+                <div className="drawer-side">
+                    <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
+                    <div className="bg-base-300 min-h-full w-6/12 p-4">
+                        <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400 mt-10">Enter the
+                            new
                             expense data:</p>
-                        <EditExpenseForm editExpense={handleEdit} expense={expToEdit}/>
-                </div>
-            </div>
+                        <EditExpenseForm editExpense={submitEdit} expense={expToEdit}/>
+                    </div>
+                </div> : null
+            }
         </div>
     );
 }

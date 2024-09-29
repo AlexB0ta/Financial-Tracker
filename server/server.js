@@ -76,6 +76,13 @@ app.get('/getAllIncomes', async (req, res) => {
     if(error)
         return res.status(400).send();
 
+    incomeSum = data.reduce((accumulator,currentValue) => {
+        if(currentValue.type === 'income')
+            return accumulator + currentValue.amount;
+        else
+            return accumulator;
+    },0)
+
     obj.allIncomes = data;
     obj.totalIncome = incomeSum;
 
@@ -118,11 +125,33 @@ app.delete('/deleteExpense/:id', async (req, res) => {
     return res.status(response.status).send();
 })
 
+app.patch('/updateExpense', async (req, res) => {
+    //console.log(req.body);
+    const {data,error} = await supabase
+        .from('Transactions')
+        .update({description: req.body.description, amount: req.body.amount, category:req.body.category, created_at:req.body.date})
+        .eq('id', req.body.id)
+
+    if(error)
+        return res.status(400).send();
+
+    return res.status(200).send();
+
+})
+
 app.post('/addExpense', async(req, res) => {
     //console.log(req.body);
     const response = await supabase
         .from('Transactions')
         .insert({description: req.body.description,amount: req.body.amount,category:req.body.category,created_at:req.body.date,type: 'expense'})
+
+    return res.status(response.status).send();
+})
+
+app.post('/addIncome', async(req, res) => {
+    const response = await supabase
+        .from('Transactions')
+        .insert({description: req.body.description,amount: req.body.amount,category:req.body.category,created_at:req.body.date,type: 'income'})
 
     return res.status(response.status).send();
 })

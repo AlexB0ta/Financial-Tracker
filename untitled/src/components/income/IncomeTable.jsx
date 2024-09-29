@@ -4,12 +4,6 @@ import {faEllipsis, faPenToSquare, faTrashCan} from "@fortawesome/free-solid-svg
 
 function IncomeTable(props) {
 
-    function handleDelete(e) {
-
-    }
-
-    function handleEdit(e) {}
-
     function formatDate(date) {
         return new Date(date).toLocaleDateString();
     }
@@ -36,14 +30,20 @@ function IncomeTable(props) {
                         <td>{income.category}</td>
                         <td>{formatDate(income.created_at)}</td>
                         <td>
-                        <div className="dropdown dropdown-hover">
-                            <div tabIndex={0} role="button" className="btn bg-base-100 "><FontAwesomeIcon icon={faEllipsis}/></div>
-                            <ul tabIndex={0}
-                                className="dropdown-content menu rounded-box z-[1] w-30 p-2 shadow bg-base-300">
-                                <li><a onClick={handleEdit}><FontAwesomeIcon icon={faPenToSquare} />Edit</a></li>
-                                <li><a onClick={handleDelete}><FontAwesomeIcon icon={faTrashCan} />Delete</a></li>
-                            </ul>
-                        </div>
+                            <div className="dropdown dropdown-hover">
+                                <div tabIndex={0} role="button" className="btn bg-base-100 "><FontAwesomeIcon
+                                    icon={faEllipsis}/></div>
+                                <ul tabIndex={0}
+                                    className="dropdown-content menu rounded-box z-[1] w-30 p-2 shadow bg-base-300">
+                                    <li>
+                                        <label htmlFor="my-drawer" className="drawer-button"
+                                               onClick={() => props.onEdit(expense)}>
+                                            <FontAwesomeIcon icon={faPenToSquare}/>Edit
+                                        </label>
+                                    </li>
+                                    <li><a onClick={() => props.onDelete(expense)}><FontAwesomeIcon icon={faTrashCan}/>Delete</a></li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                 )) : <tr>
