@@ -8,7 +8,7 @@ function SuccessAlert(props) {
         if (progress > 0) {
             const interval = setInterval(() => {
                 setProgress(prevProgress => prevProgress - 1);
-            }, 50); // Decrease progress every 100milisec
+            }, 20); // Decrease progress every 20milisec
 
             return () => clearInterval(interval); // Clear the interval on component unmount
         }

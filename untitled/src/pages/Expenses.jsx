@@ -25,8 +25,8 @@ function Expenses(props) {
     const [idToDel, setIdToDel] = useState();
     const [dataRefresh, setDataRefresh] = useState(false);
     const [expToEdit, setExpToEdit] = useState(null);
-    const [isSuccessAddEdit, setIsSuccessAddEdit] = useState(false);
-    const [isErrorAddEdit, setIsErrorAddEdit] = useState(false);
+    const [isSuccessAddEditDel, setIsSuccessAddEditDel] = useState(false);
+    const [isErrorAddEditDel, setIsErrorAddEditDel] = useState(false);
 
 
     useEffect(() => {
@@ -61,12 +61,12 @@ function Expenses(props) {
         //console.log(expense);
         //insert into db table
         try {
-            setIsErrorAddEdit(false);
+            setIsErrorAddEditDel(false);
             const res = await axios.post('http://localhost:8080/addExpense', expense);
-            setIsSuccessAddEdit(true);
+            setIsSuccessAddEditDel(true);
         } catch (err) {
-            setIsErrorAddEdit(true);
-            setIsSuccessAddEdit(false);
+            setIsErrorAddEditDel(true);
+            setIsSuccessAddEditDel(false);
             console.log(err);
         }
         setDataRefresh(!dataRefresh);
@@ -80,12 +80,12 @@ function Expenses(props) {
 
     async function submitEdit(newExpense) {
         try {
-            setIsErrorAddEdit(false);
+            setIsErrorAddEditDel(false);
             const res = await axios.patch('http://localhost:8080/updateExpense', newExpense);
-            setIsSuccessAddEdit(true);
+            setIsSuccessAddEditDel(true);
         } catch (err) {
-            setIsErrorAddEdit(true);
-            setIsSuccessAddEdit(false);
+            setIsErrorAddEditDel(true);
+            setIsSuccessAddEditDel(false);
             console.log(err);
         }
 
@@ -104,11 +104,13 @@ function Expenses(props) {
             //refresh useEffect
             const sendDelete = async () => {
                 try {
+                    setIsErrorAddEditDel(false)
                     const res = await axios.delete(`http://localhost:8080/deleteExpense/${idToDel}`);
-                    console.log(res);
-                    //verify res.status and alert fail/completed on left side
+                    if(res.status >=200 && res.status < 300)
+                        setIsSuccessAddEditDel(true);
                 } catch (err) {
-                    //setIsError(true);
+                    setIsErrorAddEditDel(true);
+                    setIsSuccessAddEditDel(false);
                     console.log(err);
                 }
             }
@@ -132,8 +134,8 @@ function Expenses(props) {
                 <div className="flex-grow p-6">
                     <div className="flex justify-center items-center gap-10 mt-10">
                         <div className="flex flex-col gap-10">
-                            {isSuccessAddEdit ? <SuccessAlert onClose={() => {setIsSuccessAddEdit(false)}}/> : null}
-                            {isErrorAddEdit ? <ErrorAlert onClose={() => {setIsErrorAddEdit(false)}}/> : null}
+                            {isSuccessAddEditDel ? <SuccessAlert onClose={() => {setIsSuccessAddEditDel(false)}}/> : null}
+                            {isErrorAddEditDel ? <ErrorAlert onClose={() => {setIsErrorAddEditDel(false)}}/> : null}
                             <h1 className="text-3xl font-bold text-center">Expenses</h1>
                             <CardExpenses amount={totalExpense} income={totalIncome}/>
                         </div>

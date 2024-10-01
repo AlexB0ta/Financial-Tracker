@@ -8,6 +8,9 @@ import axios from 'axios';
 import ErrorFetching from "./Error.jsx";
 import Loading from "./Loading.jsx";
 import EditIncomeForm from "../components/income/EditIncomeForm.jsx";
+import DeleteAlert from "../components/DeleteAlert.jsx";
+import SuccessAlert from "../components/alerts/successAlert.jsx";
+import ErrorAlert from "../components/alerts/errorAlert.jsx";
 
 function Income(props) {
 
@@ -17,8 +20,10 @@ function Income(props) {
     const [isError, setIsError] = useState(false);
     const [dataRefresh, setDataRefresh] = useState(false);
     const [incomeToEdit, setIncomeToEdit] = useState(null);
-    const [isSuccessAddEdit, setIsSuccessAddEdit] = useState(false);
-    const [isErrorAddEdit, setIsErrorAddEdit] = useState(false);
+    const [idToDel, setIdToDel] = useState();
+    const [isDel,setIsDel] = useState(false);
+    const [isSuccessAddEditDel, setIsSuccessAddEditDel] = useState(false);
+    const [isErrorAddEditDel, setIsErrorAddEditDel] = useState(false);
 
     useEffect(() => {
         const fetchIncomes = async () => {
@@ -51,12 +56,12 @@ function Income(props) {
 
     async function addIncome(income) {
         try{
-            setIsErrorAddEdit(false);
+            setIsErrorAddEditDel(false);
             const res = await axios.post('http://localhost:8080/addIncome',income);
-            setIsSuccessAddEdit(true);
+            setIsSuccessAddEditDel(true);
         }catch(err){
-            setIsErrorAddEdit(true);
-            setIsSuccessAddEdit(false);
+            setIsErrorAddEditDel(true);
+            setIsSuccessAddEditDel(false);
             console.log(err)
         }
         setDataRefresh(!dataRefresh);
@@ -66,22 +71,58 @@ function Income(props) {
         setIncomeToEdit(income);
     }
 
-    async function submitEdit(newEdit){
+    async function submitEdit(newIncome){
         try{
-            setIsErrorAddEdit(false);
-            const res = await axios.patch('http://localhost:8080/updateIncome',newEdit);
-            setIsSuccessAddEdit(true);
+            setIsErrorAddEditDel(false);
+            const res = await axios.patch('http://localhost:8080/updateIncome',newIncome);
+            setIsSuccessAddEditDel(true);
 
         }catch(err){
-            setIsErrorAddEdit(true);
-            setIsSuccessAddEdit(false);
+            setIsErrorAddEditDel(true);
+            setIsSuccessAddEditDel(false);
             console.log(err);
         }
         setDataRefresh(!dataRefresh);
     }
 
-    function handleDelete(income) {
+    function handleDeleteSubmit(income) {
+        setIdToDel(income.id);
+        setIsDel(true);
+    }
 
+    function handleDeleteConfirmation(confirmation) {
+        if (confirmation) {
+            const sendDel = async () => {
+                try{
+                    setIsErrorAddEditDel(false);
+                    const response = await axios.delete(`http://localhost:8080/deleteIncome/${idToDel}`);
+                    if(response.status >= 200 && response.status < 300)
+                        setIsSuccessAddEditDel(true);
+                }
+                catch(err){
+                    setIsErrorAddEditDel(true);
+                    setIsSuccessAddEditDel(false);
+                    console.log(err);
+                }
+            }
+
+            sendDel();
+            setDataRefresh(!dataRefresh);
+        }
+        setIsDel(false);
+    }
+
+    async function handleSort(colName,ascending) {
+        const type = "income";
+
+        try{
+            const res = await axios.get(`http://localhost:8080/getAllTransactions/filter?type=${type}&sortBy=${colName}&ascending=${ascending}`);
+            //console.log(res.data);
+            setIncomes(res.data);
+        }
+        catch (e){
+            console.log(e)
+        }
     }
 
     return (
@@ -93,7 +134,9 @@ function Income(props) {
 
                 <div className="flex-grow p-6">
                     <div className="flex justify-center items-center gap-10 mt-10">
-                        <div className="">
+                        <div className="flex flex-col gap-10">
+                            {isSuccessAddEditDel && <SuccessAlert onClose={() => {setIsSuccessAddEditDel(false)}}/>}
+                            {isErrorAddEditDel && <ErrorAlert onClose={() => {setIsErrorAddEditDel(false)}}/>}
                             <h1 className="text-3xl font-bold mb-6 text-center">Incomes</h1>
                             <CardIncome amount={totalIncome}/>
                         </div>
@@ -107,9 +150,11 @@ function Income(props) {
                     </div>
 
                     <div className="bg-base-100 shadow-xl my-14">
-                        {<IncomeTable incomes={incomes} onEdit={handleEdit} onDelete={handleDelete} />}
+                        {<IncomeTable incomes={incomes} onEdit={handleEdit} onDelete={handleDeleteSubmit} onSort={handleSort}/>}
                     </div>
                     <Footer/>
+
+                    {isDel && <DeleteAlert onPress={handleDeleteConfirmation}/>}
                 </div>
             </div>
 

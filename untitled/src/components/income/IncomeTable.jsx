@@ -1,6 +1,12 @@
 import React from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faEllipsis, faPenToSquare, faTrashCan} from "@fortawesome/free-solid-svg-icons";
+import {
+    faArrowDown,
+    faArrowUp,
+    faEllipsis,
+    faPenToSquare,
+    faTrashCan
+} from "@fortawesome/free-solid-svg-icons";
 
 function IncomeTable(props) {
 
@@ -15,10 +21,66 @@ function IncomeTable(props) {
                 <thead>
                 <tr>
                     <th></th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>Category</th>
-                    <th>Date</th>
+                    <th>
+                        <div className="flex gap-1 text-sm items-center">
+                            Description
+                            <div>
+                                <button>
+                                    <FontAwesomeIcon icon={faArrowUp} className="mr-0.5 text-lime-400"
+                                                     onClick={() => props.onSort("description", true)}/>
+                                </button>
+                                <button>
+                                    <FontAwesomeIcon icon={faArrowDown} className="text-red-700"
+                                                     onClick={() => props.onSort("description", false)}/>
+                                </button>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div className="flex gap-1 text-sm items-center">
+                            Amount
+                            <div>
+                                <button>
+                                    <FontAwesomeIcon icon={faArrowUp} className="mr-0.5 text-lime-400"
+                                                     onClick={() => props.onSort("amount", true)}/>
+                                </button>
+                                <button>
+                                    <FontAwesomeIcon icon={faArrowDown} className="text-red-700"
+                                                     onClick={() => props.onSort("amount", false)}/>
+                                </button>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div className="flex gap-1 text-sm items-center">
+                            Category
+                            <div>
+                                <button>
+                                    <FontAwesomeIcon icon={faArrowUp} className="mr-0.5 text-lime-400"
+                                                     onClick={() => props.onSort("category", true)}/>
+                                </button>
+                                <button>
+                                    <FontAwesomeIcon icon={faArrowDown} className="text-red-700"
+                                                     onClick={() => props.onSort("category", false)}/>
+                                </button>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div className="flex gap-1 text-sm items-center">
+                            Date
+                            <div>
+                                <button>
+                                    <FontAwesomeIcon icon={faArrowUp} className="mr-0.5 text-lime-400"
+                                                     onClick={() => props.onSort("created_at", true)}/>
+                                </button>
+                                <button>
+                                    <FontAwesomeIcon icon={faArrowDown} className="text-red-700"
+                                                     onClick={() => props.onSort("created_at", false)}/>
+                                </button>
+                            </div>
+                        </div>
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -37,11 +99,12 @@ function IncomeTable(props) {
                                     className="dropdown-content menu rounded-box z-[1] w-30 p-2 shadow bg-base-300">
                                     <li>
                                         <label htmlFor="my-drawer" className="drawer-button"
-                                               onClick={() => props.onEdit(expense)}>
+                                               onClick={() => props.onEdit(income)}>
                                             <FontAwesomeIcon icon={faPenToSquare}/>Edit
                                         </label>
                                     </li>
-                                    <li><a onClick={() => props.onDelete(expense)}><FontAwesomeIcon icon={faTrashCan}/>Delete</a></li>
+                                    <li><a onClick={() => props.onDelete(income)}><FontAwesomeIcon icon={faTrashCan}/>Delete</a>
+                                    </li>
                                 </ul>
                             </div>
                         </td>
@@ -52,7 +115,8 @@ function IncomeTable(props) {
                 </tbody>
             </table>
         </div>
-    );
+    )
+        ;
 }
 
 export default IncomeTable;
