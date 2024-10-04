@@ -5,6 +5,9 @@ export default {
     extend: {
       boxShadow: {
         '3xl': '0 35px 60px -15px rgba(255, 255, 0, 0.2)',
+      },
+      backgroundImage: {
+        'cube-pattern': "url('/src/assets/pattern.svg')",
       }
     },
   },

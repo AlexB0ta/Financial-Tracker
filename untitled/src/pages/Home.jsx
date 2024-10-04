@@ -5,6 +5,8 @@ import CardExpenses from "../components/expense/CardExpenses.jsx";
 import Table1 from "../components/Table1.jsx";
 import ChartComponent from "../components/Chart1.jsx";
 import Footer from "../components/Footer.jsx";
+import Loading from "./Loading.jsx";
+import Error from "./Error.jsx";
 
 
 function Home() {
@@ -39,11 +41,11 @@ function Home() {
     },[])
 
      if(isError){
-         return <div>Error</div>; //make error page
+         return <Error />; //make error page
      }
 
     if(isLoading){
-        return <div>Loading...</div>; //make loading page
+        return <Loading />; //make loading page
     }
 
 

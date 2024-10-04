@@ -3,20 +3,71 @@ import bodyParser from 'body-parser';
 import 'dotenv/config'
 import {createClient} from '@supabase/supabase-js'
 import cors from 'cors';
+import axios from 'axios';
+import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
 
 const corsOptions = {
     origin: 'http://localhost:5173',
+    credentials: true
 }
 
 const supabase = createClient(process.env.DB_URL, process.env.DB_KEY);
 //var shared between functions
 let incomeSum = 0;
+const API_KEY = "S9M6AWAZMYHJKIOA";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
+app.post('/addUser',async (req,res)=>{
+    const {username, email, password} = req.body;
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    const {error} = await supabase
+        .from('Users')
+        .insert({name: username, email: email, password: hashPassword})
+
+    if(error){
+        console.log(error);
+        return res.status(400).send(error.message);
+    }
+    return res.status(200).send()
+})
+
+app.post('/login',async (req,res)=>{
+    const {email, password} = req.body;
+    const {data,error} = await supabase
+        .from('Users')
+        .select()
+        .eq('email',email)
+        .single();
+
+    if(error){
+        console.log(error);
+        return res.status(400).send(error.message);
+    }
+
+    const verifyPass = await bcrypt.compare(password, data.password);
+
+    if(verifyPass === false){
+        return res.status(401).send({error: 'Invalid Credentials'});
+    }
+
+    const token = jwt.sign({id: data.id, email: data.email},JWT_SECRET,{expiresIn: '1h'});
+
+    res.cookie('token',token,{
+        httpOnly:true,
+        secure:true,
+        maxAge: 3600000 //1hour
+    });
+
+    res.status(200).send({message:"Successfully logged in"});
+})
 
 app.get('/getAllTransactions', async (req, res) => {
     const obj = {
@@ -219,6 +270,12 @@ app.get('/getAllTransactions/filter', async (req, res) => {
     if(data)
         return res.status(200).send(data);
 
+})
+
+app.get('/getBestInvestments',async (req,res) =>{
+    const response = await axios.get(`https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=${API_KEY}`);
+
+    return res.status(200).send(response.data);
 })
 
 app.listen(8080, function (err) {

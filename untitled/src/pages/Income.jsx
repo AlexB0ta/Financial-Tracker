@@ -116,12 +116,19 @@ function Income(props) {
         const type = "income";
 
         try{
+            setIsError(false);
+            setIsLoading(true);
             const res = await axios.get(`http://localhost:8080/getAllTransactions/filter?type=${type}&sortBy=${colName}&ascending=${ascending}`);
             //console.log(res.data);
             setIncomes(res.data);
+
         }
         catch (e){
+            setIsError(true)
             console.log(e)
+        }
+        finally {
+            setIsLoading(false)
         }
     }
 
@@ -137,7 +144,7 @@ function Income(props) {
                         <div className="flex flex-col gap-10">
                             {isSuccessAddEditDel && <SuccessAlert onClose={() => {setIsSuccessAddEditDel(false)}}/>}
                             {isErrorAddEditDel && <ErrorAlert onClose={() => {setIsErrorAddEditDel(false)}}/>}
-                            <h1 className="text-3xl font-bold mb-6 text-center">Incomes</h1>
+                            <h1 className="text-3xl font-bold text-center">Incomes</h1>
                             <CardIncome amount={totalIncome}/>
                         </div>
 

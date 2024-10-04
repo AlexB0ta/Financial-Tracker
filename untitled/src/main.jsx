@@ -6,6 +6,8 @@ import {createBrowserRouter,RouterProvider} from "react-router-dom";
 import Error from './pages/Error.jsx';
 import Expenses from "./pages/Expenses.jsx";
 import Income from "./pages/Income.jsx";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
 
 const router = createBrowserRouter([
     {
@@ -21,6 +23,16 @@ const router = createBrowserRouter([
     {
         path: '/incomes',
         element: <Income />,
+        errorElement: <Error />
+    },
+    {
+        path: '/login',
+        element: <Login />,
+        errorElement: <Error />
+    },
+    {
+        path: '/register',
+        element: <Register />,
         errorElement: <Error />
     }
 ])

@@ -122,6 +122,25 @@ function Expenses(props) {
         setIsDelete(false);
     }
 
+    async function handleSort(colName,ascending) {
+        const type = "expense";
+
+        try{
+            setIsLoading(true);
+            setIsError(false);
+            const res = await axios.get(`http://localhost:8080/getAllTransactions/filter?type=${type}&sortBy=${colName}&ascending=${ascending}`);
+            //console.log(res.data);
+            setExpenses(res.data);
+        }
+        catch (e){
+            setIsError(true);
+            console.log(e)
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }
+
 
     return (
         <div className="drawer drawer-end">
@@ -152,7 +171,7 @@ function Expenses(props) {
                     </div>
 
                     <div className="card bg-base-100 shadow-xl my-14">
-                        <ExpensesTable expenses={expenses} onEdit={handleEdit} onDelete={handleDeleteSubmit}/>
+                        <ExpensesTable expenses={expenses} onEdit={handleEdit} onDelete={handleDeleteSubmit} onSort={handleSort}/>
                     </div>
                     <Footer/>
 
