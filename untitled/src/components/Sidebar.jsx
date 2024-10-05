@@ -2,18 +2,29 @@ import React from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBusinessTime} from "@fortawesome/free-solid-svg-icons";
+import avatarImg from "../assets/pxfuel.jpg"
+import {Link} from "react-router-dom";
 
 
-
-const Sidebar = () => {
+function Sidebar(props) {
     return (
         <div className="bg-base-200 w-64 min-h-screen p-4">
             <div className="flex flex-col items-center mt-10">
-                <div><FontAwesomeIcon icon={faBusinessTime} size="2x"/></div>
-                <div className="text-center py-4">
+                <div><FontAwesomeIcon icon={faBusinessTime} size="2x" className="hover:text-red-700"/></div>
+                <div className="text-center py-4 hover:text-red-700">
                     <h2 className="text-2xl font-bold">Finance Tracker</h2>
                 </div>
-
+                <Link to="">
+                    <div
+                        className="bg-base-100 p-5 flex justify-between hover:bg-blue-950 w-52 h-20 mt-10 items-center rounded-lg hover:shadow-2xl">
+                        <div className="avatar">
+                            <div className="w-12 h-12 rounded-full">
+                                <img src={avatarImg} alt="avatar-image"/>
+                            </div>
+                        </div>
+                        <div className="font-semibold">{localStorage.getItem('username')}</div>
+                    </div>
+                </Link>
             </div>
 
             <ul className="menu p-2 rounded-box mt-10">

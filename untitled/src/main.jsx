@@ -12,6 +12,11 @@ import Register from "./pages/Register.jsx";
 const router = createBrowserRouter([
     {
         path: '/',
+        element: <Login />, //make a home page with 2 buttons sign up sign in
+        errorElement: <Error />
+    },
+    {
+        path: '/home',
         element: <App />,
         errorElement: <Error />
     },
@@ -34,6 +39,10 @@ const router = createBrowserRouter([
         path: '/register',
         element: <Register />,
         errorElement: <Error />
+    },
+    {
+        path: '*',
+        element: <Error />
     }
 ])
 

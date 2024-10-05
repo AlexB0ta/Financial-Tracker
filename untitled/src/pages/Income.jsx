@@ -8,12 +8,15 @@ import axios from 'axios';
 import ErrorFetching from "./Error.jsx";
 import Loading from "./Loading.jsx";
 import EditIncomeForm from "../components/income/EditIncomeForm.jsx";
-import DeleteAlert from "../components/DeleteAlert.jsx";
+import DeleteAlert from "../components/alerts/DeleteAlert.jsx";
 import SuccessAlert from "../components/alerts/successAlert.jsx";
 import ErrorAlert from "../components/alerts/errorAlert.jsx";
+import Navbar from "../components/Navbar.jsx";
+import {useNavigate} from "react-router-dom";
 
 function Income(props) {
 
+    const navigate = useNavigate();
     const [incomes, setIncomes] = useState([]);
     const [totalIncome, setTotalIncome] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +39,9 @@ function Income(props) {
             }
             catch(err){
                 setIsError(true);
-                console.log(err);
+                if(err.status === 401){
+                    navigate('/login',{state:{redirect: true}});
+                }
             }
             finally {
                 setIsLoading(false);
@@ -62,6 +67,9 @@ function Income(props) {
         }catch(err){
             setIsErrorAddEditDel(true);
             setIsSuccessAddEditDel(false);
+            if(err.status === 401){
+                navigate('/login',{state:{redirect: true}});
+            }
             console.log(err)
         }
         setDataRefresh(!dataRefresh);
@@ -80,6 +88,9 @@ function Income(props) {
         }catch(err){
             setIsErrorAddEditDel(true);
             setIsSuccessAddEditDel(false);
+            if(err.status === 401){
+                navigate('/login',{state:{redirect: true}});
+            }
             console.log(err);
         }
         setDataRefresh(!dataRefresh);
@@ -102,6 +113,9 @@ function Income(props) {
                 catch(err){
                     setIsErrorAddEditDel(true);
                     setIsSuccessAddEditDel(false);
+                    if(err.status === 401){
+                        navigate('/login',{state:{redirect: true}});
+                    }
                     console.log(err);
                 }
             }
@@ -125,7 +139,6 @@ function Income(props) {
         }
         catch (e){
             setIsError(true)
-            console.log(e)
         }
         finally {
             setIsLoading(false)
@@ -139,8 +152,9 @@ function Income(props) {
 
                 <Sidebar className="w-64"/>
 
-                <div className="flex-grow p-6">
-                    <div className="flex justify-center items-center gap-10 mt-10">
+                <div className="flex-grow">
+                    <Navbar />
+                    <div className="flex justify-center items-center gap-10 mt-10 p-6">
                         <div className="flex flex-col gap-10">
                             {isSuccessAddEditDel && <SuccessAlert onClose={() => {setIsSuccessAddEditDel(false)}}/>}
                             {isErrorAddEditDel && <ErrorAlert onClose={() => {setIsErrorAddEditDel(false)}}/>}

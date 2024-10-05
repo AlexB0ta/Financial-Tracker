@@ -7,10 +7,14 @@ import ChartComponent from "../components/Chart1.jsx";
 import Footer from "../components/Footer.jsx";
 import Loading from "./Loading.jsx";
 import Error from "./Error.jsx";
+import Navbar from "../components/Navbar.jsx";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 
 function Home() {
 
+    const navigate = useNavigate();
     const [total, setTotal] = useState(0);
     const [totalIncome, setTotalIncome] = useState(0);
     const [totalExpense, setTotalExpense] = useState(0);
@@ -23,15 +27,17 @@ function Home() {
         const fetchTransactions = async () => {
             try{
                 setIsLoading(true);
-                const response = await fetch('http://localhost:8080/getAllTransactions');
-                const data = await response.json();
-                setTotal(data.totalAmount);
-                setTotalIncome(data.totalIncome);
-                setTotalExpense(data.totalExpenses);
-                setTransactions(data.allTransactions);
+                const response = await axios.get('http://localhost:8080/getAllTransactions',{withCredentials: true});
+                console.log(response);
+                setTotal(response.data.totalAmount);
+                setTotalIncome(response.data.totalIncome);
+                setTotalExpense(response.data.totalExpenses);
+                setTransactions(response.data.allTransactions);
             }catch(e){
                 setIsError(true);
-                console.error(e);
+                if(e.status === 401){
+                    navigate('/login',{state:{redirect: true}});
+                }
             }finally {
                 setIsLoading(false);
             }
@@ -51,6 +57,7 @@ function Home() {
 
     return (
         <div className="container mx-auto bg-base-100">
+            <Navbar />
             <div className="w-full max-w-screen-lg mx-auto mt-14 pb-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <CardTotal amount={total} income={totalIncome} expenses={totalExpense} />

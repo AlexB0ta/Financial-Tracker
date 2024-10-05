@@ -6,6 +6,8 @@ import cors from 'cors';
 import axios from 'axios';
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
+import data from "pg/lib/query.js";
+import cookieParser from "cookie-parser";
 
 const corsOptions = {
     origin: 'http://localhost:5173',
@@ -22,9 +24,57 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
+app.use(cookieParser());
+
+//middle-ware
+const verifyToken = (req, res, next) => {
+    console.log(req.cookies);
+    const token = req.cookies.token;
+
+    if(!token){
+        return res.status(401).send('No token provided');
+    }
+
+    try{
+        const response = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = response;
+        next();
+    }
+    catch(err){
+        console.log(err);
+        return res.status(401).send('Invalid token');
+    }
+}
 
 app.post('/addUser',async (req,res)=>{
-    const {username, email, password} = req.body;
+    const {username, email, password,captchaToken} = req.body;
+
+    try{
+        const response = await axios.post(
+            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+            new URLSearchParams({
+                secret: process.env.CAPTCHA_SECRET,
+                response: captchaToken
+            }).toString(),
+            {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            }
+        );
+
+        if(response.data.success){
+            console.log(response.data);
+            //continue to register else return error
+        }
+        else{
+            console.log("aci")
+            return res.status(401).send('Verification failed!')
+        }
+    }catch (error){
+        //console.log(error);
+        return res.status(401).send('Error verifying captcha!')
+    }
 
     const hashPassword = await bcrypt.hash(password, 10);
 
@@ -40,7 +90,34 @@ app.post('/addUser',async (req,res)=>{
 })
 
 app.post('/login',async (req,res)=>{
-    const {email, password} = req.body;
+    const {email, password,captchaToken} = req.body;
+
+    try{
+        const response = await axios.post(
+            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+            new URLSearchParams({
+                secret: process.env.CAPTCHA_SECRET,
+                response: captchaToken
+            }).toString(),
+            {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            }
+        );
+
+        if(response.data.success){
+            console.log(response.data);
+            //continue to login else return error
+        }
+        else{
+            return res.status(401).send('Verification failed!')
+        }
+    }catch (error){
+        console.log(error);
+        return res.status(401).send('Error verifying captcha!')
+    }
+
     const {data,error} = await supabase
         .from('Users')
         .select()
@@ -66,20 +143,27 @@ app.post('/login',async (req,res)=>{
         maxAge: 3600000 //1hour
     });
 
-    res.status(200).send({message:"Successfully logged in"});
+    res.status(200).send({message:"Successfully logged in",username: data.name});
 })
 
-app.get('/getAllTransactions', async (req, res) => {
+app.post('/logout', async (req,res) => {
+    res.cookie('token','',{maxAge: 0});
+    res.status(200).send({message:"Logged out successfully"});
+})
+
+app.get('/getAllTransactions', verifyToken, async (req, res) => {
     const obj = {
         totalAmount: 0,
         totalIncome: 0,
         totalExpenses: 0,
         allTransactions: []
     }
+    console.log(req.user);
 
     const {data, error2} = await supabase
         .from('Transactions')
         .select('*')
+        .eq('user_id',req.user.id)
 
     if (error2) {
         return res.status(400).send();
@@ -114,7 +198,7 @@ app.get('/getAllTransactions', async (req, res) => {
     res.status(200).send(obj);
 })
 
-app.get('/getAllIncomes', async (req, res) => {
+app.get('/getAllIncomes', verifyToken ,async (req, res) => {
     const obj = {
         totalIncome: 0,
         allIncomes: []
@@ -141,7 +225,7 @@ app.get('/getAllIncomes', async (req, res) => {
     res.status(200).send(obj);
 })
 
-app.get('/getAllExpenses', async (req, res) => {
+app.get('/getAllExpenses', verifyToken, async (req, res) => {
     const obj = {
         totalExpenses: 0,
         totalIncome: incomeSum,
@@ -167,7 +251,7 @@ app.get('/getAllExpenses', async (req, res) => {
     res.status(200).send(obj);
 })
 
-app.delete('/deleteExpense/:id', async (req, res) => {
+app.delete('/deleteExpense/:id',verifyToken, async (req, res) => {
     //console.log(req.params);
     const response = await supabase
         .from('Transactions')
@@ -177,7 +261,7 @@ app.delete('/deleteExpense/:id', async (req, res) => {
     return res.status(response.status).send();
 })
 
-app.patch('/updateExpense', async (req, res) => {
+app.patch('/updateExpense',verifyToken,async (req, res) => {
     //console.log(req.body);
     const {data, error} = await supabase
         .from('Transactions')
@@ -196,7 +280,7 @@ app.patch('/updateExpense', async (req, res) => {
 
 })
 
-app.post('/addExpense', async (req, res) => {
+app.post('/addExpense', verifyToken,async (req, res) => {
     //console.log(req.body);
     const response = await supabase
         .from('Transactions')
@@ -211,7 +295,7 @@ app.post('/addExpense', async (req, res) => {
     return res.status(response.status).send();
 })
 
-app.post('/addIncome', async (req, res) => {
+app.post('/addIncome', verifyToken,async (req, res) => {
     const response = await supabase
         .from('Transactions')
         .insert({
@@ -225,7 +309,7 @@ app.post('/addIncome', async (req, res) => {
     return res.status(response.status).send();
 })
 
-app.patch('/updateIncome', async (req, res) => {
+app.patch('/updateIncome', verifyToken,async (req, res) => {
 
     const {error} = await supabase
         .from('Transactions')
@@ -243,7 +327,7 @@ app.patch('/updateIncome', async (req, res) => {
     return res.status(200).send();
 })
 
-app.delete('/deleteIncome/:id', async (req, res) => {
+app.delete('/deleteIncome/:id', verifyToken,async (req, res) => {
     const response = await supabase
         .from('Transactions')
         .delete()
@@ -252,7 +336,7 @@ app.delete('/deleteIncome/:id', async (req, res) => {
     return res.status(response.status).send();
 })
 
-app.get('/getAllTransactions/filter', async (req, res) => {
+app.get('/getAllTransactions/filter', verifyToken ,async (req, res) => {
     console.log(req.query)
     const {type, sortBy, ascending} = req.query;
     const isAscending = (ascending === 'true');
@@ -272,7 +356,7 @@ app.get('/getAllTransactions/filter', async (req, res) => {
 
 })
 
-app.get('/getBestInvestments',async (req,res) =>{
+app.get('/getBestInvestments', async (req,res) =>{
     const response = await axios.get(`https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=${API_KEY}`);
 
     return res.status(200).send(response.data);

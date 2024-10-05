@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import axios from "axios";
 import RegisterSucces from "../components/alerts/registerSucces.jsx";
 import RegisterError from "../components/alerts/registerError.jsx";
+import {Turnstile} from "@marsidev/react-turnstile";
 
 function Register(props) {
 
@@ -11,6 +12,7 @@ function Register(props) {
     const [email, setEmail] = React.useState("");
     const [isError, setIsError] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [captchaToken, setCaptchaToken] = useState("");
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -20,7 +22,7 @@ function Register(props) {
         }
          try {
              setIsError(false);
-             const response = await axios.post("http://localhost:8080/addUser", {username, email, password});
+             const response = await axios.post("http://localhost:8080/addUser", {username, email, password,captchaToken});
              setIsSuccess(true);
          }
         catch(err) {
@@ -58,6 +60,7 @@ function Register(props) {
                             </label>
                             <input type="password" value={password} placeholder="Password" className="input input-bordered" onChange={(e) => setPassword(e.target.value)} required/>
                         </div>
+                        <Turnstile siteKey={import.meta.env.VITE_SITE_KEY} className="text-center mt-6" onSuccess={setCaptchaToken}/>
                         <div className="form-control mt-6">
                             <button
                                 className="btn btn-primary w-full bg-gradient-to-r from-orange-400 to-yellow-900 text-white">
