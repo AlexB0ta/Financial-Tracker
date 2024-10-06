@@ -88,7 +88,7 @@ function Expenses(props) {
     async function submitEdit(newExpense) {
         try {
             setIsErrorAddEditDel(false);
-            const res = await axios.patch('http://localhost:8080/updateExpense', newExpense);
+            const res = await axios.patch('http://localhost:8080/updateExpense', newExpense,{withCredentials: true});
             setIsSuccessAddEditDel(true);
         } catch (err) {
             setIsErrorAddEditDel(true);
@@ -115,7 +115,7 @@ function Expenses(props) {
             const sendDelete = async () => {
                 try {
                     setIsErrorAddEditDel(false)
-                    const res = await axios.delete(`http://localhost:8080/deleteExpense/${idToDel}`);
+                    const res = await axios.delete(`http://localhost:8080/deleteExpense/${idToDel}`,{withCredentials: true});
                     if(res.status >=200 && res.status < 300)
                         setIsSuccessAddEditDel(true);
                 } catch (err) {

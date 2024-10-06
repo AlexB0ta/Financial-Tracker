@@ -208,6 +208,7 @@ app.get('/getAllIncomes', verifyToken ,async (req, res) => {
         .from('Transactions')
         .select()
         .eq('type', 'income')
+        .eq('user_id',req.user.id)
 
     if (error)
         return res.status(400).send();
@@ -236,6 +237,7 @@ app.get('/getAllExpenses', verifyToken, async (req, res) => {
         .from('Transactions')
         .select()
         .eq('type', 'expense')
+        .eq('user_id',req.user.id)
 
     if (error)
         return res.status(400).send();
@@ -289,7 +291,8 @@ app.post('/addExpense', verifyToken,async (req, res) => {
             amount: req.body.amount,
             category: req.body.category,
             created_at: req.body.date,
-            type: 'expense'
+            type: 'expense',
+            user_id: req.user.id
         })
 
     return res.status(response.status).send();
@@ -303,7 +306,8 @@ app.post('/addIncome', verifyToken,async (req, res) => {
             amount: req.body.amount,
             category: req.body.category,
             created_at: req.body.date,
-            type: 'income'
+            type: 'income',
+            user_id: req.user.id
         })
 
     return res.status(response.status).send();
@@ -336,7 +340,7 @@ app.delete('/deleteIncome/:id', verifyToken,async (req, res) => {
     return res.status(response.status).send();
 })
 
-app.get('/getAllTransactions/filter', verifyToken ,async (req, res) => {
+app.get('/getAllTransactions/filter', verifyToken, async (req, res) => {
     console.log(req.query)
     const {type, sortBy, ascending} = req.query;
     const isAscending = (ascending === 'true');
@@ -345,6 +349,7 @@ app.get('/getAllTransactions/filter', verifyToken ,async (req, res) => {
         .from('Transactions')
         .select()
         .eq('type', type)
+        .eq('user_id',req.user.id)
         .order(sortBy, {ascending: isAscending})
 
 

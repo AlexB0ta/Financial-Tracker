@@ -42,7 +42,7 @@ function Login(props) {
 
             localStorage.setItem('username', response.data.username);
             //console.log(response);
-            navigate("/");
+            navigate("/home");
         } catch (err) {
             setIsError(true);
             console.log(err);
@@ -82,7 +82,7 @@ function Login(props) {
                                        onSuccess={setCaptchaToken}/>
                             <div className="form-control mt-6">
                                 <button
-                                    className="btn btn-primary w-full bg-gradient-to-r from-orange-400 to-yellow-900 text-white">
+                                    className="btn btn-primary w-full bg-gradient-to-r from-orange-400 to-yellow-900 hover:to-purple-700 text-white">
                                     Sign In
                                 </button>
                             </div>

@@ -18,8 +18,8 @@ function Sidebar(props) {
                     <div
                         className="bg-base-100 p-5 flex justify-between hover:bg-blue-950 w-52 h-20 mt-10 items-center rounded-lg hover:shadow-2xl">
                         <div className="avatar">
-                            <div className="w-12 h-12 rounded-full">
-                                <img src={avatarImg} alt="avatar-image"/>
+                            <div className="w-12 h-12 rounded-full bg-white">
+                                <img src={`https://robohash.org/${localStorage.getItem('username')}.png`} alt="avatar-image"/>
                             </div>
                         </div>
                         <div className="font-semibold">{localStorage.getItem('username')}</div>
@@ -29,7 +29,7 @@ function Sidebar(props) {
 
             <ul className="menu p-2 rounded-box mt-10">
                 <li className="mb-2">
-                    <a href="/" className="hover:bg-primary hover:text-white">
+                    <a href="/home" className="hover:bg-primary hover:text-white">
                         <i className="fas fa-chart-line mr-2"></i> Dashboard
                     </a>
                 </li>

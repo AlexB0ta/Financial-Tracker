@@ -6,10 +6,10 @@ import Table1 from "../components/Table1.jsx";
 import ChartComponent from "../components/Chart1.jsx";
 import Footer from "../components/Footer.jsx";
 import Loading from "./Loading.jsx";
-import Error from "./Error.jsx";
 import Navbar from "../components/Navbar.jsx";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import ErrorFetching from "./ErrorFetching.jsx";
 
 
 function Home() {
@@ -47,11 +47,11 @@ function Home() {
     },[])
 
      if(isError){
-         return <Error />; //make error page
+         return <ErrorFetching />;
      }
 
     if(isLoading){
-        return <Loading />; //make loading page
+        return <Loading />;
     }
 
 

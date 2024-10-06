@@ -63,7 +63,7 @@ function Register(props) {
                         <Turnstile siteKey={import.meta.env.VITE_SITE_KEY} className="text-center mt-6" onSuccess={setCaptchaToken}/>
                         <div className="form-control mt-6">
                             <button
-                                className="btn btn-primary w-full bg-gradient-to-r from-orange-400 to-yellow-900 text-white">
+                                className="btn btn-primary w-full bg-gradient-to-r from-orange-400 to-yellow-900 hover:to-purple-700 text-white">
                                 Sign Up
                             </button>
                         </div>

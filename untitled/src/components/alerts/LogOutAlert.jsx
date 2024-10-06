@@ -4,7 +4,7 @@ import {faTriangleExclamation} from "@fortawesome/free-solid-svg-icons";
 
 function LogOutAlert(props) {
     return (
-        <div role="alert" className="alert alert-warning mr-3 w-1/2">
+        <div role="alert" className="alert bg-gradient-to-r from-teal-400 to-blue-500 hover:from-pink-500 hover:to-orange-200 mr-3 w-1/2 text-black">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

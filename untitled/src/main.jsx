@@ -8,11 +8,12 @@ import Expenses from "./pages/Expenses.jsx";
 import Income from "./pages/Income.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import WelcomePage from "./pages/Welcome.jsx";
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <Login />, //make a home page with 2 buttons sign up sign in
+        element: <WelcomePage />, //make a home page with 2 buttons sign up sign in
         errorElement: <Error />
     },
     {
