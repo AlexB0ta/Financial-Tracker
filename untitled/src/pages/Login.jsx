@@ -41,6 +41,7 @@ function Login(props) {
             }, {withCredentials: true});
 
             localStorage.setItem('username', response.data.username);
+            localStorage.setItem('email', email);
             //console.log(response);
             navigate("/home");
         } catch (err) {
@@ -53,7 +54,7 @@ function Login(props) {
     }
 
     return (
-        <div className="bg-[url('/background2.jpg')]">
+        <div className="bg-[url('/background2.jpg')] bg-cover bg-center">
             <div className="absolute right-0 m-5 w-1/3">
                 {isRedirect && <RedirectAlert onClose={() => setIsRedirect(false)}/>}
             </div>
@@ -95,7 +96,7 @@ function Login(props) {
                         className="w-1/2 bg-gradient-to-l from-blue-700 to-purple-950 text-white flex flex-col items-center justify-center p-10  rounded-r-lg">
                         <h2 className="text-4xl font-bold mb-4">Welcome to login</h2>
                         <p className="text-lg mb-6">Don't have an account?</p>
-                        <Link className="btn btn-outline btn-white" to="/register">Sign Up</Link>
+                        <Link className="btn btn-outline btn-white" to="/">Sign Up</Link>
                     </div>
                 </div>
             </div>

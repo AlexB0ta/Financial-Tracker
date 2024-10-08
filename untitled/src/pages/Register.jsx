@@ -36,7 +36,7 @@ function Register(props) {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-[url('/background2.jpg')]">
+        <div className="flex min-h-screen items-center justify-center">
             <div className="flex w-full max-w-4xl shadow-2xl rounded-lg">
                 {/* Left side (Login form) */}
                 <div className="w-1/2 bg-base-300 p-10  rounded-l-lg">

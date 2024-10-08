@@ -6,16 +6,20 @@ import WelcomePage from "./Welcome.jsx";
 
 const LandingPage = () => {
     return (
-        <div className="w-full">
+        <div className="w-full bg-[url('/background2.jpg')] bg-cover bg-center">
             {/* Welcome Section */}
-            <section>
-                <WelcomePage/>
-            </section>
+            <motion.div initial={{y: "50%"}} animate={{y: "0%"}} transition={{duration: 2}}>
+                <section>
+                    <WelcomePage/>
+                </section>
+            </motion.div>
 
             {/* Register Section */}
-            <section id="register-section" >
-                <Register/>
-            </section>
+            <div>
+                <section id="register-section">
+                    <Register needsBackGround={true}/>
+                </section>
+            </div>
         </div>
     );
 };

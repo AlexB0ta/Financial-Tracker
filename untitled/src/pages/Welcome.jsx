@@ -1,28 +1,24 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {motion} from "framer-motion";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const WelcomePage = () => {
     return (
-        <div
-            className="h-screen bg-cover bg-center flex items-center justify-center text-center"
-            style={{
-                backgroundImage: "url('/background2.jpg')",
-            }}
-        >
+        <div className="h-screen flex flex-col items-center justify-center text-center text-white gap-4">
             {/* Main content */}
-            <motion.div className="text-white" initial={{y: "100%"}} animate={{y: "0%"}} transition={{duration: 2}}>
-                <h1 className="text-5xl font-bold" >WELCOME</h1>
-                <p className="mt-4 text-lg">
-                    Take control of your finances. Track your spending, save smarter, and achieve your financial goals
-                    with ease.
-                </p>
+            <h1 className="text-5xl font-bold">WELCOME</h1>
+            <p className="text-lg">
+                Take control of your finances. Track your spending, save smarter, and achieve your financial goals
+                with ease.
+            </p>
 
-                {/* Button */}
-                <Link to="/register">
-                    <button className="btn mt-4 btn-outline text-white">Get started</button>
-                </Link>
-            </motion.div>
+            <button className="btn mt-4 btn-outline text-white" onClick={() => {window.scrollTo(0,document.body.scrollHeight)}}>Get started now</button>
+
+            <span className="loading loading-ring loading-md mt-3"></span>
+            <span className="loading loading-ring loading-sm"></span>
+            <span className="loading loading-ring loading-xs"></span>
+
+
         </div>
     );
 };

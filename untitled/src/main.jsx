@@ -10,11 +10,12 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 //import WelcomePage from "./pages/Welcome.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
+import Profile from "./pages/Profile.jsx";
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <LandingPage />, //make a home page with 2 buttons sign up sign in
+        element: <LandingPage />,
         errorElement: <Error />
     },
     {
@@ -40,6 +41,11 @@ const router = createBrowserRouter([
     {
         path: '/register',
         element: <Register />,
+        errorElement: <Error />
+    },
+    {
+        path: '/profile',
+        element: <Profile />,
         errorElement: <Error />
     },
     {
