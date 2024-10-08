@@ -53,7 +53,7 @@ function Login(props) {
     }
 
     return (
-        <div className="bg-gradient-to-l from-slate-700 to-gray-950">
+        <div className="bg-[url('/background2.jpg')]">
             <div className="absolute right-0 m-5 w-1/3">
                 {isRedirect && <RedirectAlert onClose={() => setIsRedirect(false)}/>}
             </div>

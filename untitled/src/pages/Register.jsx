@@ -36,7 +36,7 @@ function Register(props) {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-slate-700 to-gray-950">
+        <div className="flex min-h-screen items-center justify-center bg-[url('/background2.jpg')]">
             <div className="flex w-full max-w-4xl shadow-2xl rounded-lg">
                 {/* Left side (Login form) */}
                 <div className="w-1/2 bg-base-300 p-10  rounded-l-lg">
@@ -77,7 +77,7 @@ function Register(props) {
 
                 {/* Right side (Welcome message) */}
                 <div
-                    className="w-1/2 bg-gradient-to-l from-blue-700 to-purple-950 text-white flex flex-col items-center justify-center p-10  rounded-r-lg">
+                    className="w-1/2 bg-gradient-to-r from-blue-700 to-purple-950 text-white flex flex-col items-center justify-center p-10  rounded-r-lg">
                     <h2 className="text-4xl font-bold mb-4 text-center">Welcome to our service</h2>
                     <p className="text-lg mb-6">Already have an account?</p>
                     <Link className="btn btn-outline btn-white" to="/login">Sign In</Link>
