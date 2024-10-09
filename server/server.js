@@ -6,8 +6,8 @@ import cors from 'cors';
 import axios from 'axios';
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
+import data from "pg/lib/query.js";
 import cookieParser from "cookie-parser";
-import {jwtDecode} from "jwt-decode";
 
 const corsOptions = {
     origin: 'http://localhost:5173',
@@ -29,7 +29,7 @@ app.use(cookieParser());
 
 //middle-ware
 const verifyToken = (req, res, next) => {
-    //console.log(req.cookies);
+    console.log(req.cookies);
     const token = req.cookies.token;
 
     if(!token){
@@ -47,8 +47,6 @@ const verifyToken = (req, res, next) => {
     }
 }
 
-
-//API
 app.post('/addUser',async (req,res)=>{
     const {username, email, password,captchaToken} = req.body;
 
@@ -152,32 +150,6 @@ app.post('/login',async (req,res)=>{
 app.post('/logout', async (req,res) => {
     res.cookie('token','',{maxAge: 0});
     res.status(200).send({message:"Logged out successfully"});
-})
-
-app.patch('/editUser',verifyToken, async (req,res)=>{
-    const {userName, email} = req.body;
-
-    const{error} = await supabase
-        .from('Users')
-        .update({name: userName, email: email})
-        .eq('id',req.user.id)
-
-    if(error){
-        console.log(error);
-        return res.status(400).send('Update failed!')
-    }
-
-    res.status(200).send();
-})
-
-app.delete('/deleteUser',verifyToken,async (req,res) =>{
-
-    const response = await supabase
-        .from('Users')
-        .delete()
-        .eq('id',req.user.id)
-
-    return res.status(response.status).send(response.statusText);
 })
 
 app.get('/getAllTransactions', verifyToken, async (req, res) => {
