@@ -13,6 +13,7 @@ const corsOptions = {
     origin: 'http://localhost:5173',
     credentials: true
 }
+const port = process.env.PORT || 3000;
 
 const supabase = createClient(process.env.DB_URL, process.env.DB_KEY);
 //var shared between functions
@@ -395,7 +396,7 @@ app.get('/getBestInvestments', async (req,res) =>{
     return res.status(200).send(response.data);
 })
 
-app.listen(8080, function (err) {
+app.listen(port, function (err) {
     if (err) console.log("Error in server setup")
     console.log("Server listening on Port: 8080");
 })
