@@ -62,7 +62,7 @@ function Login(props) {
                 <div className="flex w-full max-w-4xl shadow-2xl rounded-lg mt-3">
                     {/* Left side (Login form) */}
                     <div className="w-1/2 bg-base-300 p-10  rounded-l-lg">
-                        <h2 className="text-3xl font-bold mb-6 text-center">Sign In</h2>
+                        <h2 className="text-3xl font-bold mb-6 text-center hover:text-white">Sign In</h2>
                         <form onSubmit={handleSubmit}>
                             <div className="form-control mb-4">
                                 <label className="label">

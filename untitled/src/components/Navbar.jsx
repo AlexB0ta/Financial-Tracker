@@ -29,7 +29,7 @@ function Navbar(props) {
             <div className="flex-none">
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar placeholder">
-                        <div className="bg-white text-neutral-content w-12 rounded-full">
+                        <div className="bg-black text-neutral-content w-12 rounded-full">
                             <img src={`https://robohash.org/${localStorage.getItem('username')}.png`}
                                  alt="avatar-image"/>
                         </div>

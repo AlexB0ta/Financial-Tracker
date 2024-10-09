@@ -141,7 +141,7 @@ function Expenses(props) {
         try{
             setIsLoading(true);
             setIsError(false);
-            const res = await axios.get(`http://localhost:8080/getAllTransactions/filter?type=${type}&sortBy=${colName}&ascending=${ascending}`);
+            const res = await axios.get(`http://localhost:8080/getAllTransactions/filter?type=${type}&sortBy=${colName}&ascending=${ascending}`,{withCredentials: true});
             //console.log(res.data);
             setExpenses(res.data);
         }

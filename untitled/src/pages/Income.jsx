@@ -132,7 +132,7 @@ function Income(props) {
         try{
             setIsError(false);
             setIsLoading(true);
-            const res = await axios.get(`http://localhost:8080/getAllTransactions/filter?type=${type}&sortBy=${colName}&ascending=${ascending}`);
+            const res = await axios.get(`http://localhost:8080/getAllTransactions/filter?type=${type}&sortBy=${colName}&ascending=${ascending}`,{withCredentials: true});
             //console.log(res.data);
             setIncomes(res.data);
 
