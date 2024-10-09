@@ -34,7 +34,7 @@ function Login(props) {
 
         try {
             setIsError(false);
-            const response = await axios.post("http://localhost:8080/login", {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
                 email,
                 password,
                 captchaToken

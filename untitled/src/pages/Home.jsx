@@ -27,7 +27,7 @@ function Home() {
         const fetchTransactions = async () => {
             try{
                 setIsLoading(true);
-                const response = await axios.get('http://localhost:8080/getAllTransactions',{withCredentials: true});
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/getAllTransactions`,{withCredentials: true});
                 console.log(response);
                 setTotal(response.data.totalAmount);
                 setTotalIncome(response.data.totalIncome);

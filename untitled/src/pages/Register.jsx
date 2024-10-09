@@ -22,7 +22,7 @@ function Register(props) {
         }
          try {
              setIsError(false);
-             const response = await axios.post("http://localhost:8080/addUser", {username, email, password,captchaToken});
+             const response = await axios.post("${import.meta.env.VITE_API_URL}/addUser", {username, email, password,captchaToken});
              setIsSuccess(true);
          }
         catch(err) {

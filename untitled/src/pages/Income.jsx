@@ -32,7 +32,7 @@ function Income(props) {
         const fetchIncomes = async () => {
             try{
                 setIsLoading(true);
-                const res = await axios.get('http://localhost:8080/getAllIncomes',{withCredentials: true});
+                const res = await axios.get('${import.meta.env.VITE_API_URL}/getAllIncomes',{withCredentials: true});
                 console.log(res.data);
                 setIncomes(res.data.allIncomes);
                 setTotalIncome(res.data.totalIncome);
@@ -62,7 +62,7 @@ function Income(props) {
     async function addIncome(income) {
         try{
             setIsErrorAddEditDel(false);
-            const res = await axios.post('http://localhost:8080/addIncome',income,{withCredentials: true});
+            const res = await axios.post('${import.meta.env.VITE_API_URL}/addIncome',income,{withCredentials: true});
             setIsSuccessAddEditDel(true);
         }catch(err){
             setIsErrorAddEditDel(true);
@@ -82,7 +82,7 @@ function Income(props) {
     async function submitEdit(newIncome){
         try{
             setIsErrorAddEditDel(false);
-            const res = await axios.patch('http://localhost:8080/updateIncome',newIncome,{withCredentials: true});
+            const res = await axios.patch('${import.meta.env.VITE_API_URL}/updateIncome',newIncome,{withCredentials: true});
             setIsSuccessAddEditDel(true);
 
         }catch(err){
@@ -106,7 +106,7 @@ function Income(props) {
             const sendDel = async () => {
                 try{
                     setIsErrorAddEditDel(false);
-                    const response = await axios.delete(`http://localhost:8080/deleteIncome/${idToDel}`,{withCredentials: true});
+                    const response = await axios.delete(`${import.meta.env.VITE_API_URL}/deleteIncome/${idToDel}`,{withCredentials: true});
                     if(response.status >= 200 && response.status < 300)
                         setIsSuccessAddEditDel(true);
                 }
@@ -132,7 +132,7 @@ function Income(props) {
         try{
             setIsError(false);
             setIsLoading(true);
-            const res = await axios.get(`http://localhost:8080/getAllTransactions/filter?type=${type}&sortBy=${colName}&ascending=${ascending}`);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/getAllTransactions/filter?type=${type}&sortBy=${colName}&ascending=${ascending}`);
             //console.log(res.data);
             setIncomes(res.data);
 

@@ -13,7 +13,7 @@ function Navbar(props) {
     function handleLogout(confirmation) {
         if(confirmation) {
             const submitLogout = async () => {
-                await axios.post('http://localhost:8080/logout', {}, {withCredentials: true});
+                await axios.post('${import.meta.env.VITE_API_URL}/logout', {}, {withCredentials: true});
                 navigate("/login");
             }
 

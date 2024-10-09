@@ -36,7 +36,7 @@ function Expenses(props) {
         const fetchTransactions = async () => {
             try {
                 setIsLoading(true);
-                const res = await axios.get('http://localhost:8080/getAllExpenses',{withCredentials: true});
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/getAllExpenses`,{withCredentials: true});
                 setExpenses(res.data.allExpenses);
                 setTotalExpense(res.data.totalExpenses);
                 setTotalIncome(res.data.totalIncome);
@@ -66,7 +66,7 @@ function Expenses(props) {
         //insert into db table
         try {
             setIsErrorAddEditDel(false);
-            const res = await axios.post('http://localhost:8080/addExpense', expense,{withCredentials: true});
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/addExpense`, expense,{withCredentials: true});
             setIsSuccessAddEditDel(true);
         } catch (err) {
             setIsErrorAddEditDel(true);
@@ -88,7 +88,7 @@ function Expenses(props) {
     async function submitEdit(newExpense) {
         try {
             setIsErrorAddEditDel(false);
-            const res = await axios.patch('http://localhost:8080/updateExpense', newExpense,{withCredentials: true});
+            const res = await axios.patch(`${import.meta.env.VITE_API_URL}/updateExpense`, newExpense,{withCredentials: true});
             setIsSuccessAddEditDel(true);
         } catch (err) {
             setIsErrorAddEditDel(true);
@@ -115,7 +115,7 @@ function Expenses(props) {
             const sendDelete = async () => {
                 try {
                     setIsErrorAddEditDel(false)
-                    const res = await axios.delete(`http://localhost:8080/deleteExpense/${idToDel}`,{withCredentials: true});
+                    const res = await axios.delete(`${import.meta.env.VITE_API_URL}/deleteExpense/${idToDel}`,{withCredentials: true});
                     if(res.status >=200 && res.status < 300)
                         setIsSuccessAddEditDel(true);
                 } catch (err) {
@@ -141,7 +141,7 @@ function Expenses(props) {
         try{
             setIsLoading(true);
             setIsError(false);
-            const res = await axios.get(`http://localhost:8080/getAllTransactions/filter?type=${type}&sortBy=${colName}&ascending=${ascending}`);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/getAllTransactions/filter?type=${type}&sortBy=${colName}&ascending=${ascending}`);
             //console.log(res.data);
             setExpenses(res.data);
         }
