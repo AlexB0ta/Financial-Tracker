@@ -10,7 +10,7 @@ import data from "pg/lib/query.js";
 import cookieParser from "cookie-parser";
 
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: 'https://financial-tracker-frontend2.onrender.com',
     credentials: true
 }
 const port = process.env.PORT || 3000;
