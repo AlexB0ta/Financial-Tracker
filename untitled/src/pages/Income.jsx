@@ -32,7 +32,7 @@ function Income(props) {
         const fetchIncomes = async () => {
             try{
                 setIsLoading(true);
-                const res = await axios.get('${import.meta.env.VITE_API_URL}/getAllIncomes',{withCredentials: true});
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/getAllIncomes`,{withCredentials: true});
                 console.log(res.data);
                 setIncomes(res.data.allIncomes);
                 setTotalIncome(res.data.totalIncome);
@@ -62,7 +62,7 @@ function Income(props) {
     async function addIncome(income) {
         try{
             setIsErrorAddEditDel(false);
-            const res = await axios.post('${import.meta.env.VITE_API_URL}/addIncome',income,{withCredentials: true});
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/addIncome`,income,{withCredentials: true});
             setIsSuccessAddEditDel(true);
         }catch(err){
             setIsErrorAddEditDel(true);
@@ -82,7 +82,7 @@ function Income(props) {
     async function submitEdit(newIncome){
         try{
             setIsErrorAddEditDel(false);
-            const res = await axios.patch('${import.meta.env.VITE_API_URL}/updateIncome',newIncome,{withCredentials: true});
+            const res = await axios.patch(`${import.meta.env.VITE_API_URL}/updateIncome`,newIncome,{withCredentials: true});
             setIsSuccessAddEditDel(true);
 
         }catch(err){
