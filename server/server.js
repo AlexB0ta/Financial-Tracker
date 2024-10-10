@@ -10,7 +10,7 @@ import data from "pg/lib/query.js";
 import cookieParser from "cookie-parser";
 
 const corsOptions = {
-    origin: 'https://financial-tracker-frontend2.onrender.com',
+    origin: 'https://financial-tracker-front.netlify.app',
     credentials: true
 }
 const port = process.env.PORT || 3000;
