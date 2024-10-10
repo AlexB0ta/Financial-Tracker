@@ -7,6 +7,8 @@ import {
     BarElement,
     PointElement,
     LineElement,
+    LineController,  // Add this line
+    BarController,   // Add this line (since you're using bar chart too)
     Title,
     Tooltip,
     Legend,
@@ -14,14 +16,15 @@ import {
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChartLine} from "@fortawesome/free-solid-svg-icons";
 
-
-// Register required components
+// Register required components including LineController and BarController
 ChartJS.register(
     CategoryScale,
     LinearScale,
     BarElement,
-    PointElement,
     LineElement,
+    PointElement,
+    LineController, // Register the LineController
+    BarController,  // Register the BarController
     Title,
     Tooltip,
     Legend
@@ -49,7 +52,7 @@ const ChartComponent = () => {
                 borderWidth: 1,
             },
             {
-                type: 'line',
+                type: 'line',  // Ensure "line" type is used correctly
                 label: 'Net Profit',
                 data: [3000, 4000, 17000, 10000, 5000, 5000],
                 fill: false,
