@@ -13,10 +13,10 @@ import path from "path";
 import { fileURLToPath } from 'url';
 
 const corsOptions = {
-    origin: 'https://financial-tracker-frontend2.onrender.com',
+    origin: 'http://localhost:5173',
     credentials: true
 }
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 const supabase = createClient(process.env.DB_URL, process.env.DB_KEY);
 //var shared between functions
@@ -31,9 +31,9 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 
 //sf-uri
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-app.use(express.static(path.join(__dirname, 'dist')));
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+// app.use(express.static(path.join(__dirname, 'dist')));
 
 //middle-ware
 const verifyToken = (req, res, next) => {
@@ -55,9 +55,9 @@ const verifyToken = (req, res, next) => {
     }
 }
 
-app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
+// app.get('/*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+// });
 
 app.post('/addUser',async (req,res)=>{
     const {username, email, password,captchaToken} = req.body;
@@ -104,6 +104,7 @@ app.post('/addUser',async (req,res)=>{
 
 app.post('/login',async (req,res)=>{
     const {email, password,captchaToken} = req.body;
+    console.log(req.body)
 
     try{
         const response = await axios.post(
