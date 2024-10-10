@@ -34,7 +34,7 @@ const router = createBrowserRouter([
         errorElement: <Error />
     },
     {
-        path: '/login',
+        path: 'https://financial-tracker-frontend2.onrender.com/login',
         element: <Login />,
         errorElement: <Error />
     },
