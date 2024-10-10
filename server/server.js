@@ -9,6 +9,9 @@ import jwt from "jsonwebtoken";
 import data from "pg/lib/query.js";
 import cookieParser from "cookie-parser";
 
+import path from "path";
+import { fileURLToPath } from 'url';
+
 const corsOptions = {
     origin: 'https://financial-tracker-frontend2.onrender.com',
     credentials: true
@@ -26,6 +29,11 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 app.use(cookieParser());
+
+//sf-uri
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use(express.static(path.join(__dirname, 'dist')));
 
 //middle-ware
 const verifyToken = (req, res, next) => {
@@ -46,6 +54,10 @@ const verifyToken = (req, res, next) => {
         return res.status(401).send('Invalid token');
     }
 }
+
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 app.post('/addUser',async (req,res)=>{
     const {username, email, password,captchaToken} = req.body;
