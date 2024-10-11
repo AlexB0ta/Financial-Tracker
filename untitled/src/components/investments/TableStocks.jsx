@@ -2,7 +2,7 @@ import React from 'react';
 
 function TableStocks(props) {
     return (
-        <div className="overflow-x-auto pt-10">
+        <div className="overflow-x-auto pt-10 bg-base-200 bg-opacity-80">
             <table className="table table-md">
                 <thead>
                 <tr className="text-teal-300">

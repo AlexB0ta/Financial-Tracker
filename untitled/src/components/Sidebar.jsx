@@ -7,7 +7,7 @@ import {Link} from "react-router-dom";
 
 function Sidebar(props) {
     return (
-        <div className="bg-base-200 w-64 min-h-screen p-4">
+        <div className="bg-gradient-to-b from-slate-950 to-neutral-950 w-64 min-h-screen p-4">
             <div className="flex flex-col items-center mt-10">
                 <div><FontAwesomeIcon icon={faBusinessTime} size="2x" className="hover:text-red-700"/></div>
                 <div className="text-center py-4 hover:text-red-700">

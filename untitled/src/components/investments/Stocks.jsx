@@ -43,7 +43,7 @@ function Stocks(props) {
     }
 
     return (
-        <div className="flex flex-col gap-5 bg-base-200 rounded-lg p-5">
+        <div className="flex flex-col gap-5  rounded-lg p-5">
 
             <div className="flex justify-between">
                 <p className="font-bold text-4xl hover:text-red-700 cursor-pointer">Stocks</p>

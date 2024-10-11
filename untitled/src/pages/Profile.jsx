@@ -20,7 +20,7 @@ function Profile(props) {
             <div className="flex flex-col flex-grow justify-between">
                 <Navbar/>
                 <div
-                    className="flex flex-col text-center bg-slate-800 shadow-xl p-6 hover:shadow-3xl mx-auto w-2/3 rounded-2xl">
+                    className="flex flex-col text-center bg-base-200 bg-opacity-90 shadow-xl p-6 hover:shadow-3xl mx-auto w-2/3 rounded-2xl">
                     <div className="flex justify-between items-center">
                         <Link to=""><FontAwesomeIcon icon={faUserGroup} className="size-9 hover:text-lime-400"/></Link>
                         <div className="w-28 rounded-xl bg-teal-600">

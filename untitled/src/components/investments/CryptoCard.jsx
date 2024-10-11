@@ -16,7 +16,7 @@ function CryptoCard(props) {
 
     return (
 
-        <div className="stats stats-horizontal shadow-lg hover:shadow-2xl hover:bg-blue-950 cursor-pointer">
+        <div className="stats stats-horizontal shadow-lg hover:shadow-2xl hover:bg-blue-950 cursor-pointer bg-base-200">
             <div className="stat">
                 <div className="stat-title">Symbol</div>
                 <div className="stat-value">{crypto}-{currency}</div>

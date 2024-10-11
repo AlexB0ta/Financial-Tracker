@@ -4,12 +4,12 @@ import * as res from "autoprefixer";
 import Loading from "../../pages/Loading.jsx";
 import ErrorFetching from "../../pages/ErrorFetching.jsx";
 import CryptoCard from "./CryptoCard.jsx";
-import bnb from "../../../public/bnb.png"
-import btc from "../../../public/btc.png"
-import eth from "../../../public/eth.png"
-import euro from "../../../public/euro.png"
-import sol from "../../../public/sol.png"
-import usd from "../../../public/usd.png"
+import bnb from "/bnb.png"
+import btc from "/btc.png"
+import eth from "/eth.png"
+import euro from "/euro.png"
+import sol from "/sol.png"
+import usd from "/usd.png"
 
 function Crypto(props) {
 
@@ -71,7 +71,7 @@ function Crypto(props) {
     }
 
     return (
-        <div className="flex flex-col gap-5 bg-base-200 rounded-lg p-5">
+        <div className="flex flex-col gap-5  rounded-lg p-5">
 
             <div className="flex justify-between">
                 <p className="font-bold text-4xl hover:text-red-700 cursor-pointer">Crypto</p>

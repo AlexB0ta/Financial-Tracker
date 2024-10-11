@@ -24,7 +24,7 @@ function Navbar(props) {
     }
 
     return (
-        <div className="navbar bg-base-100 flex justify-between">
+        <div className="navbar flex justify-between">
             {isAlertVisible ? <LogOutAlert onPress={handleLogout} /> : <div></div>}
             <div className="flex-none">
                 <div className="dropdown dropdown-end">

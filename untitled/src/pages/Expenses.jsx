@@ -174,7 +174,7 @@ function Expenses(props) {
                         </div>
 
                         <div className="flex flex-col grow">
-                            <div className="bg-slate-800 rounded-md p-2">
+                            <div className="bg-base-200 rounded-md p-2">
                                 <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400">Enter a
                                     new
                                     expense:</p>
@@ -184,7 +184,7 @@ function Expenses(props) {
 
                     </div>
 
-                    <div className="card bg-base-100 shadow-xl my-14">
+                    <div className="card bg-base-200 bg-opacity-90 shadow-xl my-14 mx-3 rounded-md">
                         <ExpensesTable expenses={expenses} onEdit={handleEdit} onDelete={handleDeleteSubmit} onSort={handleSort}/>
                     </div>
                     <Footer/>

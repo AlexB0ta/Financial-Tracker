@@ -21,7 +21,7 @@ const port = process.env.PORT || 8080;
 const supabase = createClient(process.env.DB_URL, process.env.DB_KEY);
 //var shared between functions
 let incomeSum = 0;
-const API_KEY = "S9M6AWAZMYHJKIOA";
+const API_KEY = process.env.ALPHA_API_KEY;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const app = express();
@@ -37,7 +37,6 @@ app.use(cookieParser());
 
 //middle-ware
 const verifyToken = (req, res, next) => {
-    console.log(req.cookies);
     const token = req.cookies.token;
 
     if(!token){
@@ -379,7 +378,23 @@ app.get('/getAllTransactions/filter', verifyToken, async (req, res) => {
 app.get('/getBestInvestments', async (req,res) =>{
     const response = await axios.get(`https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=${API_KEY}`);
 
+    if(response.data.Information.includes("rate limit")) {  //to test if i have api requests left
+        return res.status(500).send(response.data.Information)
+    }
+
     return res.status(200).send(response.data);
+})
+
+app.get('/getCryptoData', async (req,res) =>{
+    const {crypto,currency} = req.query;
+    //console.log(req.query)
+    const response = await axios.get(`https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${crypto}&to_currency=${currency}&apikey=${API_KEY}`);
+    console.log(response)
+    if(response.data.Information.includes("rate limit")) {  //to test if i have api requests left
+        return res.status(500).send(response.data.Information)
+    }
+
+    return res.status(200).send(response);
 })
 
 app.listen(port, function (err) {

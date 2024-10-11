@@ -162,7 +162,7 @@ function Income(props) {
                             <CardIncome amount={totalIncome}/>
                         </div>
 
-                        <div className="grow bg-slate-800 rounded-md p-2">
+                        <div className="grow bg-base-200 rounded-md p-2">
                             <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400">Enter a new
                                 income:</p>
                             <AddIncomeForm addIncome={addIncome}/>
@@ -170,7 +170,7 @@ function Income(props) {
 
                     </div>
 
-                    <div className="bg-base-100 shadow-xl my-14">
+                    <div className="bg-base-200 bg-opacity-90 shadow-xl my-14 mx-3 rounded-md">
                         {<IncomeTable incomes={incomes} onEdit={handleEdit} onDelete={handleDeleteSubmit} onSort={handleSort}/>}
                     </div>
                     <Footer/>

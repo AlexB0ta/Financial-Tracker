@@ -56,7 +56,7 @@ function Home() {
 
 
     return (
-        <div className="container mx-auto bg-base-100">
+        <div className="flex flex-col flex-grow">
             <Navbar />
             <div className="w-full max-w-screen-lg mx-auto mt-14 pb-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -66,14 +66,14 @@ function Home() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 my-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 my-10 mx-6">
                 {/* Table Card */}
-                <div className="card bg-slate-800 shadow-xl p-6 hover:shadow-3xl">
+                <div className="card bg-base-100 shadow-xl p-6 hover:shadow-3xl">
                     <Table1 transactions={transactions}/>
                 </div>
 
                 {/* Chart Card */}
-                <div className="card bg-slate-800 shadow-xl p-6 hover:shadow-3xl">
+                <div className="card bg-base-100 shadow-xl p-6 hover:shadow-3xl">
                     <ChartComponent/>
                 </div>
             </div>
