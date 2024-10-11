@@ -78,8 +78,19 @@ function Crypto(props) {
                 Last updated: {cryptoData[0]["6. Last Refreshed"]}
             </div>
 
+            <div className="flex flex-row-reverse">
+                <div className="dropdown dropdown-hover">
+                    <div tabIndex={0} role="button" className="btn btn-outline">Choose currency</div>
+                    <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow">
+                        <li><a onClick={() => setCurrency("USD")}>USD</a></li>
+                        <li><a onClick={() => setCurrency("EUR")}>EUR</a></li>
+                    </ul>
+                </div>
+            </div>
+
             {cryptoData.length > 0 ? cryptoData.map((crypto, index) => (
-                <CryptoCard key={index} data={crypto} img1={currency === "USD" ? currencyLogos[0] : currencyLogos[1]} img2={cryptoLogos[index]}/>
+                <CryptoCard key={index} data={crypto} img1={currency === "USD" ? currencyLogos[0] : currencyLogos[1]}
+                            img2={cryptoLogos[index]}/>
             )) : <div className="text-center text-xl">Error! You may have exceeded the daily request limit!</div>}
         </div>
     );
