@@ -2,7 +2,7 @@ import React from 'react';
 
 function CardTotal(props) {
     return (
-        <div className="card bg-base-100 bg-cover bg-center w-72 shadow-md hover:shadow-3xl h-48">
+        <div className="card bg-base-200 w-72 shadow-md hover:shadow-3xl h-48">
             <div className="card-body">
                 <h2 className="card-title text-lg font-bold mr-5">Available amount</h2>
                 <div className="flex justify-around">

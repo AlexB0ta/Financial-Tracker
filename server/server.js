@@ -160,6 +160,35 @@ app.post('/login',async (req,res)=>{
     res.status(200).send({message:"Successfully logged in",username: data.name});
 })
 
+app.patch('/editUser',verifyToken, async (req,res)=>{
+    const {userName, email} = req.body;
+    console.log(req.body)
+
+    const{error} = await supabase
+        .from('Users')
+        .update({name: userName, email: email})
+        .eq('id',req.user.id)
+
+
+    if(error){
+        console.log(error);
+        return res.status(400).send('Update failed!')
+    }
+
+    res.status(200).send();
+})
+
+app.delete('/deleteUser',verifyToken,async (req,res) =>{
+
+    const response = await supabase
+        .from('Users')
+        .delete()
+        .eq('id',req.user.id)
+
+    return res.status(response.status).send(response.statusText);
+})
+
+
 app.post('/logout', async (req,res) => {
     res.cookie('token','',{maxAge: 0});
     res.status(200).send({message:"Logged out successfully"});

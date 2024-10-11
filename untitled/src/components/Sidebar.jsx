@@ -8,14 +8,14 @@ import {Link} from "react-router-dom";
 function Sidebar(props) {
     return (
         <div className="bg-gradient-to-b from-slate-950 to-neutral-950 w-64 min-h-screen p-4">
-            <div className="flex flex-col items-center mt-10">
+            <div className="flex flex-col items-center mt-10 cursor-pointer text-white">
                 <div><FontAwesomeIcon icon={faBusinessTime} size="2x" className="hover:text-red-700"/></div>
                 <div className="text-center py-4 hover:text-red-700">
-                    <h2 className="text-2xl font-bold">Finance Tracker</h2>
+                    <h2 className="text-3xl font-bold">Finance Tracker</h2>
                 </div>
                 <Link to="">
                     <div
-                        className="bg-base-100 p-5 flex justify-between hover:bg-blue-950 w-52 h-20 mt-10 items-center rounded-lg hover:shadow-2xl">
+                        className="bg-gradient-to-r from-orange-800 to-purple-900 p-5 flex justify-between hover:bg-blue-950 w-52 h-20 mt-10 items-center rounded-lg hover:shadow-2xl">
                         <div className="avatar">
                             <div className="w-12 h-12 rounded-full bg-white">
                                 <img src={`https://robohash.org/${localStorage.getItem('username')}.png`} alt="avatar-image"/>
@@ -45,6 +45,7 @@ function Sidebar(props) {
                 <li className="mb-2">
                     <a href="/invest" className="hover:bg-primary hover:text-white">
                         <i className="fas fa-money-bill-trend-up mr-2"></i> Investments
+                        <span className="badge badge-sm">New</span>
                     </a>
                 </li>
                 <li className="mb-2">

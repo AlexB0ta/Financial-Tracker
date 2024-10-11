@@ -4,7 +4,7 @@ import { faMoneyBillTransfer} from '@fortawesome/free-solid-svg-icons';
 
 function CardExpense(props) {
     return (
-        <div className="card bg-base-100 w-72 h-48 shadow-md hover:shadow-3xl">
+        <div className="card bg-base-200 w-72 h-48 shadow-md hover:shadow-3xl">
             <div className="card-body">
                 <div className="flex items-center justify-between">
                     <h2 className="card-title text-lg font-bold mr-5">Total expenses</h2>

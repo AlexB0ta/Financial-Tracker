@@ -68,12 +68,12 @@ function Home() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 my-10 mx-6">
                 {/* Table Card */}
-                <div className="card bg-base-100 shadow-xl p-6 hover:shadow-3xl">
+                <div className="card bg-base-200 shadow-xl p-6 hover:shadow-3xl">
                     <Table1 transactions={transactions}/>
                 </div>
 
                 {/* Chart Card */}
-                <div className="card bg-base-100 shadow-xl p-6 hover:shadow-3xl">
+                <div className="card bg-base-200 shadow-xl p-6 hover:shadow-3xl">
                     <ChartComponent/>
                 </div>
             </div>
