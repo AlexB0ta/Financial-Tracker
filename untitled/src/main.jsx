@@ -8,9 +8,9 @@ import Expenses from "./pages/Expenses.jsx";
 import Income from "./pages/Income.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
-//import WelcomePage from "./pages/Welcome.jsx";
 import LandingPage from "./pages/LandingPage.jsx";
 import Profile from "./pages/Profile.jsx";
+import InvestmentPage from "./pages/InvestmentPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -47,6 +47,11 @@ const router = createBrowserRouter([
         path: '/profile',
         element: <Profile />,
         errorElement: <Error />
+    },
+    {
+      path: '/invest',
+      element: <InvestmentPage />,
+      errorElement: <Error />
     },
     {
         path: '*',

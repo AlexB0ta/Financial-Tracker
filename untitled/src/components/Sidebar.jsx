@@ -2,7 +2,6 @@ import React from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBusinessTime} from "@fortawesome/free-solid-svg-icons";
-import avatarImg from "../assets/pxfuel.jpg"
 import {Link} from "react-router-dom";
 
 
@@ -41,6 +40,11 @@ function Sidebar(props) {
                 <li className="mb-2">
                     <a href="/incomes" className="hover:bg-primary hover:text-white">
                         <i className="fas fa-hand-holding-usd mr-2"></i> Income
+                    </a>
+                </li>
+                <li className="mb-2">
+                    <a href="/invest" className="hover:bg-primary hover:text-white">
+                        <i className="fas fa-money-bill-trend-up mr-2"></i> Investments
                     </a>
                 </li>
                 <li className="mb-2">

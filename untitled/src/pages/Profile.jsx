@@ -14,7 +14,7 @@ function Profile(props) {
     const [email, setEmail] = React.useState(localStorage.getItem("email"));
 
     return (
-        <div className="flex flex-row h-auto drawer-content">
+        <div className="flex flex-row h-auto">
             <Sidebar/>
 
             <div className="flex flex-col flex-grow justify-between">

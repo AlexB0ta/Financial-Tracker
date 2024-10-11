@@ -28,7 +28,7 @@ function Home() {
             try{
                 setIsLoading(true);
                 const response = await axios.get(`${import.meta.env.VITE_API_URL}/getAllTransactions`,{withCredentials: true});
-                console.log(response);
+                //console.log(response);
                 setTotal(response.data.totalAmount);
                 setTotalIncome(response.data.totalIncome);
                 setTotalExpense(response.data.totalExpenses);
