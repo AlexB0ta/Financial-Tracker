@@ -16,7 +16,7 @@ function CryptoCard(props) {
 
     return (
 
-        <div className="stats stats-horizontal shadow-lg hover:shadow-2xl hover:bg-blue-950 cursor-pointer bg-base-200">
+        <div className="stats stats-horizontal shadow-lg hover:shadow-2xl hover:bg-blue-950 cursor-pointer bg-base-200 bg-opacity-70">
             <div className="stat">
                 <div className="stat-title">Symbol</div>
                 <div className="stat-value">{crypto}-{currency}</div>
@@ -29,7 +29,7 @@ function CryptoCard(props) {
 
             <div className="stat">
                 <div className="stat-title">Price</div>
-                <div className="stat-value">{parseFloat(price).toFixed(2)}$</div>
+                <div className="stat-value">{parseFloat(price).toFixed(2)}</div>
                 <div className="stat-figure text-secondary"><img src={props.img2} alt="crypto_logo"
                                                                  className="w-12 h-12"/>
                 </div>
@@ -37,7 +37,7 @@ function CryptoCard(props) {
 
             <div className="stat">
                 <div className="stat-title">Bid-Ask</div>
-                <div className="stat-value">{Math.floor(bidPrice)}$-{Math.floor(askPrice)}$</div>
+                <div className="stat-value">{Math.floor(bidPrice)}-{Math.floor(askPrice)}</div>
                 <div
                     className="stat-desc">↘︎ {Math.floor(askPrice - bidPrice)} ({Math.floor(askPrice / bidPrice)}%)
                 </div>

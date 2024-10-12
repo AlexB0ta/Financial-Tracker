@@ -10,7 +10,7 @@ import data from "pg/lib/query.js";
 import cookieParser from "cookie-parser";
 
 import path from "path";
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
 
 const corsOptions = {
     origin: 'http://localhost:5173',
@@ -39,29 +39,42 @@ app.use(cookieParser());
 const verifyToken = (req, res, next) => {
     const token = req.cookies.token;
 
-    if(!token){
+    if (!token) {
         return res.status(401).send('No token provided');
     }
 
-    try{
+    try {
         const response = jwt.verify(token, process.env.JWT_SECRET);
         req.user = response;
         next();
-    }
-    catch(err){
+    } catch (err) {
         console.log(err);
         return res.status(401).send('Invalid token');
     }
+}
+
+const verifyMail = (req, res, next) => {
+    const {email} = req.body;
+    console.log(email)
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const valid = emailRegex.test(email);
+    if (!valid) {
+        return res.status(401).send('Invalid email');
+    } else {
+        next();
+    }
+
 }
 
 // app.get('/*', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 // });
 
-app.post('/addUser',async (req,res)=>{
-    const {username, email, password,captchaToken} = req.body;
+app.post('/addUser', verifyMail, async (req, res) => {
+    const {username, email, password, captchaToken} = req.body;
 
-    try{
+    try {
         const response = await axios.post(
             'https://challenges.cloudflare.com/turnstile/v0/siteverify',
             new URLSearchParams({
@@ -75,15 +88,14 @@ app.post('/addUser',async (req,res)=>{
             }
         );
 
-        if(response.data.success){
+        if (response.data.success) {
             console.log(response.data);
             //continue to register else return error
-        }
-        else{
+        } else {
             console.log("aci")
             return res.status(401).send('Verification failed!')
         }
-    }catch (error){
+    } catch (error) {
         //console.log(error);
         return res.status(401).send('Error verifying captcha!')
     }
@@ -94,18 +106,18 @@ app.post('/addUser',async (req,res)=>{
         .from('Users')
         .insert({name: username, email: email, password: hashPassword})
 
-    if(error){
+    if (error) {
         console.log(error);
         return res.status(400).send(error.message);
     }
     return res.status(200).send()
 })
 
-app.post('/login',async (req,res)=>{
-    const {email, password,captchaToken} = req.body;
-    console.log(req.body)
+app.post('/login', async (req, res) => {
+    const {email, password, captchaToken} = req.body;
+    //console.log(req.body)
 
-    try{
+    try {
         const response = await axios.post(
             'https://challenges.cloudflare.com/turnstile/v0/siteverify',
             new URLSearchParams({
@@ -119,58 +131,57 @@ app.post('/login',async (req,res)=>{
             }
         );
 
-        if(response.data.success){
+        if (response.data.success) {
             console.log(response.data);
             //continue to login else return error
-        }
-        else{
+        } else {
             return res.status(401).send('Verification failed!')
         }
-    }catch (error){
+    } catch (error) {
         console.log(error);
         return res.status(401).send('Error verifying captcha!')
     }
 
-    const {data,error} = await supabase
+    const {data, error} = await supabase
         .from('Users')
         .select()
-        .eq('email',email)
+        .eq('email', email)
         .single();
 
-    if(error){
+    if (error) {
         console.log(error);
         return res.status(400).send(error.message);
     }
 
     const verifyPass = await bcrypt.compare(password, data.password);
 
-    if(verifyPass === false){
+    if (verifyPass === false) {
         return res.status(401).send({error: 'Invalid Credentials'});
     }
 
-    const token = jwt.sign({id: data.id, email: data.email},JWT_SECRET,{expiresIn: '1h'});
+    const token = jwt.sign({id: data.id, email: data.email}, JWT_SECRET, {expiresIn: '1h'});
 
-    res.cookie('token',token,{
-        httpOnly:true,
-        secure:true,
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: true,
         sameSite: 'None',
         maxAge: 3600000 //1hour
     });
 
-    res.status(200).send({message:"Successfully logged in",username: data.name});
+    res.status(200).send({message: "Successfully logged in", username: data.name});
 })
 
-app.patch('/editUser',verifyToken, async (req,res)=>{
+app.patch('/editUser', verifyMail, verifyToken, async (req, res) => {
     const {userName, email} = req.body;
     console.log(req.body)
 
-    const{error} = await supabase
+    const {error} = await supabase
         .from('Users')
         .update({name: userName, email: email})
-        .eq('id',req.user.id)
+        .eq('id', req.user.id)
 
 
-    if(error){
+    if (error) {
         console.log(error);
         return res.status(400).send('Update failed!')
     }
@@ -178,20 +189,20 @@ app.patch('/editUser',verifyToken, async (req,res)=>{
     res.status(200).send();
 })
 
-app.delete('/deleteUser',verifyToken,async (req,res) =>{
+app.delete('/deleteUser', verifyToken, async (req, res) => {
 
     const response = await supabase
         .from('Users')
         .delete()
-        .eq('id',req.user.id)
+        .eq('id', req.user.id)
 
     return res.status(response.status).send(response.statusText);
 })
 
 
-app.post('/logout', async (req,res) => {
-    res.cookie('token','',{maxAge: 0});
-    res.status(200).send({message:"Logged out successfully"});
+app.post('/logout', async (req, res) => {
+    res.cookie('token', '', {maxAge: 0});
+    res.status(200).send({message: "Logged out successfully"});
 })
 
 app.get('/getAllTransactions', verifyToken, async (req, res) => {
@@ -206,7 +217,7 @@ app.get('/getAllTransactions', verifyToken, async (req, res) => {
     const {data, error2} = await supabase
         .from('Transactions')
         .select('*')
-        .eq('user_id',req.user.id)
+        .eq('user_id', req.user.id)
 
     if (error2) {
         return res.status(400).send();
@@ -241,7 +252,7 @@ app.get('/getAllTransactions', verifyToken, async (req, res) => {
     res.status(200).send(obj);
 })
 
-app.get('/getAllIncomes', verifyToken ,async (req, res) => {
+app.get('/getAllIncomes', verifyToken, async (req, res) => {
     const obj = {
         totalIncome: 0,
         allIncomes: []
@@ -251,7 +262,7 @@ app.get('/getAllIncomes', verifyToken ,async (req, res) => {
         .from('Transactions')
         .select()
         .eq('type', 'income')
-        .eq('user_id',req.user.id)
+        .eq('user_id', req.user.id)
 
     if (error)
         return res.status(400).send();
@@ -280,7 +291,7 @@ app.get('/getAllExpenses', verifyToken, async (req, res) => {
         .from('Transactions')
         .select()
         .eq('type', 'expense')
-        .eq('user_id',req.user.id)
+        .eq('user_id', req.user.id)
 
     if (error)
         return res.status(400).send();
@@ -296,7 +307,7 @@ app.get('/getAllExpenses', verifyToken, async (req, res) => {
     res.status(200).send(obj);
 })
 
-app.delete('/deleteExpense/:id',verifyToken, async (req, res) => {
+app.delete('/deleteExpense/:id', verifyToken, async (req, res) => {
     //console.log(req.params);
     const response = await supabase
         .from('Transactions')
@@ -306,7 +317,7 @@ app.delete('/deleteExpense/:id',verifyToken, async (req, res) => {
     return res.status(response.status).send();
 })
 
-app.patch('/updateExpense',verifyToken,async (req, res) => {
+app.patch('/updateExpense', verifyToken, async (req, res) => {
     //console.log(req.body);
     const {data, error} = await supabase
         .from('Transactions')
@@ -325,7 +336,7 @@ app.patch('/updateExpense',verifyToken,async (req, res) => {
 
 })
 
-app.post('/addExpense', verifyToken,async (req, res) => {
+app.post('/addExpense', verifyToken, async (req, res) => {
     //console.log(req.body);
     const response = await supabase
         .from('Transactions')
@@ -341,7 +352,7 @@ app.post('/addExpense', verifyToken,async (req, res) => {
     return res.status(response.status).send();
 })
 
-app.post('/addIncome', verifyToken,async (req, res) => {
+app.post('/addIncome', verifyToken, async (req, res) => {
     const response = await supabase
         .from('Transactions')
         .insert({
@@ -356,7 +367,7 @@ app.post('/addIncome', verifyToken,async (req, res) => {
     return res.status(response.status).send();
 })
 
-app.patch('/updateIncome', verifyToken,async (req, res) => {
+app.patch('/updateIncome', verifyToken, async (req, res) => {
 
     const {error} = await supabase
         .from('Transactions')
@@ -374,7 +385,7 @@ app.patch('/updateIncome', verifyToken,async (req, res) => {
     return res.status(200).send();
 })
 
-app.delete('/deleteIncome/:id', verifyToken,async (req, res) => {
+app.delete('/deleteIncome/:id', verifyToken, async (req, res) => {
     const response = await supabase
         .from('Transactions')
         .delete()
@@ -392,38 +403,65 @@ app.get('/getAllTransactions/filter', verifyToken, async (req, res) => {
         .from('Transactions')
         .select()
         .eq('type', type)
-        .eq('user_id',req.user.id)
+        .eq('user_id', req.user.id)
         .order(sortBy, {ascending: isAscending})
 
 
-    if(error)
+    if (error)
         return res.status(400).send();
 
-    if(data)
+    if (data)
         return res.status(200).send(data);
 
 })
 
-app.get('/getBestInvestments', async (req,res) =>{
-    const response = await axios.get(`https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=${API_KEY}`);
+app.get('/getIncomesByDate', verifyToken, async (req, res) => {
+    const{startDate, endDate,type} = req.query;
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
+    const startDateFormatted = startDateObj.toISOString();
+    const endDateFormatted = endDateObj.toISOString();
+    //console.log(startDateFormatted,endDateFormatted)
 
-    if(response.data.Information.includes("rate limit")) {  //to test if i have api requests left
+    const {data, error} = await supabase
+        .from('Transactions')
+        .select('amount')
+        .eq('type', type)
+        .eq('user_id', req.user.id)
+        .gte('created_at', startDateFormatted)
+        .lte('created_at', endDateFormatted)
+
+
+    if (error) {
+        console.log(error)
+        return res.status(400).send();
+    }
+
+    //console.log(data)
+    return res.status(200).send(data);
+})
+
+app.get('/getBestInvestments', async (req, res) => {
+    const response = await axios.get(`https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=${API_KEY}`);
+    console.log(response.data);
+
+    if (Object.hasOwn(response.data,'Information')) {  //to test if i have api requests left
         return res.status(500).send(response.data.Information)
     }
 
     return res.status(200).send(response.data);
 })
 
-app.get('/getCryptoData', async (req,res) =>{
-    const {crypto,currency} = req.query;
+app.get('/getCryptoData', async (req, res) => {
+    const {crypto, currency} = req.query;
     //console.log(req.query)
     const response = await axios.get(`https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${crypto}&to_currency=${currency}&apikey=${API_KEY}`);
-    console.log(response)
-    if(response.data.Information.includes("rate limit")) {  //to test if i have api requests left
+    console.log(response.data)
+    if (Object.hasOwn(response.data, 'Information')) {  //to test if i have api requests left
         return res.status(500).send(response.data.Information)
     }
 
-    return res.status(200).send(response);
+    return res.status(200).send(response.data);
 })
 
 app.listen(port, function (err) {

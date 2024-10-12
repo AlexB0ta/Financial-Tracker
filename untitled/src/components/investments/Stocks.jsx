@@ -60,7 +60,7 @@ function Stocks(props) {
             </div>
 
 
-            {tabSelected === 1 && <TableStocks data={topLosers}/>}
+            {tabSelected === 1 && <TableStocks data={topGainers}/>}
             {tabSelected === 2 && <TableStocks data={topLosers}/>}
             {tabSelected === 3 && <TableStocks data={mostTraded}/>}
 

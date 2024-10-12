@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -15,6 +15,9 @@ import {
 } from 'chart.js';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChartLine} from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import ErrorFetching from "../pages/ErrorFetching.jsx";
+import Loading from "../pages/Loading.jsx";
 
 // Register required components including LineController and BarController
 ChartJS.register(
@@ -31,33 +34,97 @@ ChartJS.register(
 );
 
 const ChartComponent = () => {
+
+    const [expenses, setExpenses] = useState([]);
+    const [incomes, setIncomes] = useState([]);
+    const [profits, setProfits] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState(false);
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+
+            setIsLoading(true);
+            let allIncomes = [];
+            let allExpenses = [];
+            let allProfits = [];
+
+            for (let i = 0; i < 12; i++) {
+                let startDate = new Date(2024, i, 1);
+                let endDate = new Date(2024, i + 1, 0);
+                try {
+
+                    const response = await axios.get(`${import.meta.env.VITE_API_URL}/getIncomesByDate?startDate=${startDate}&endDate=${endDate}&type=income`, {withCredentials: true});
+                    const response2 = await axios.get(`${import.meta.env.VITE_API_URL}/getIncomesByDate?startDate=${startDate}&endDate=${endDate}&type=expense`, {withCredentials: true});
+                    //console.log(response.data[0]);
+                    if(response.data[0] !== undefined) {
+                        allIncomes.push(response.data[0].amount);
+                    }
+                    else{
+                        allIncomes.push(0);
+                    }
+
+                    if(response2.data[0] !== undefined) {
+                        allExpenses.push(response2.data[0].amount);
+                    }
+                    else{
+                        allExpenses.push(0);
+                    }
+
+                    let x = allIncomes[i] - allExpenses[i];
+                    allProfits.push(x);
+
+                } catch (e) {
+                    setIsError(true);
+                }
+            }
+            setIncomes(allIncomes);
+            setExpenses(allExpenses)
+            setProfits(allProfits)
+
+            setIsLoading(false);
+        }
+
+        fetchData();
+    }, []);
+
+    if(isError){
+        return <ErrorFetching />
+    }
+
+    if(isLoading){
+        return <Loading />;
+    }
+
+    console.log(profits)
     // Data for the chart
     const data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        labels: ['January', 'February', 'March', 'April', 'May', 'June','July','August','September','October','November','December'],
         datasets: [
             {
                 type: 'bar',
                 label: 'Expenses',
-                data: [12000, 19000, 3000, 5000, 20000, 30000],
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
+                data: expenses,
+                backgroundColor: 'rgba(52,89,89,0.5)',
+                borderColor: 'rgb(255,0,0)',
                 borderWidth: 1,
             },
             {
                 type: 'bar',
                 label: 'Income',
-                data: [15000, 23000, 20000, 15000, 25000, 35000],
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                data: incomes,
+                backgroundColor: 'rgba(0,255,98,0.5)',
+                borderColor: 'rgb(223,235,54)',
                 borderWidth: 1,
             },
             {
-                type: 'line',  // Ensure "line" type is used correctly
+                type: 'line',
                 label: 'Net Profit',
-                data: [3000, 4000, 17000, 10000, 5000, 5000],
+                data: profits,
                 fill: false,
-                borderColor: 'rgba(255, 99, 132, 1)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgb(255,255,255)',
+                backgroundColor: 'rgba(255,255,255,0.2)',
                 borderWidth: 2,
                 tension: 0.3, // Smoothing the line
             },
