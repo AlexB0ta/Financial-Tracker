@@ -59,7 +59,6 @@ function Stocks(props) {
                    onClick={() => setTabSelected(3)}>Most actively traded</a>
             </div>
 
-
             {tabSelected === 1 && <TableStocks data={topGainers}/>}
             {tabSelected === 2 && <TableStocks data={topLosers}/>}
             {tabSelected === 3 && <TableStocks data={mostTraded}/>}

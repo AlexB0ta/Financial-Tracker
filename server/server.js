@@ -8,6 +8,7 @@ import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import data from "pg/lib/query.js";
 import cookieParser from "cookie-parser";
+import {schedule} from "node-cron";
 
 import path from "path";
 import {fileURLToPath} from 'url';
@@ -452,9 +453,11 @@ app.get('/getBestInvestments', async (req, res) => {
     return res.status(200).send(response.data);
 })
 
+
 app.get('/getCryptoData', async (req, res) => {
     const {crypto, currency} = req.query;
     //console.log(req.query)
+
     const response = await axios.get(`https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${crypto}&to_currency=${currency}&apikey=${API_KEY}`);
     console.log(response.data)
     if (Object.hasOwn(response.data, 'Information')) {  //to test if i have api requests left

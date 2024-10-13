@@ -26,7 +26,9 @@ function TableStocks(props) {
                         <td>{stock.volume}</td>
                     </tr>
                 )) : <tr>
-                    <td>No data to display!</td>
+                    <td></td>
+                    <td className="text-lg">No data to display!</td>
+                    <td className="text-lg font-bold">Error! You may have exceeded the daily request limit!</td>
                 </tr>}
 
                 </tbody>

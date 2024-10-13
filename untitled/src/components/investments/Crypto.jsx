@@ -26,20 +26,20 @@ function Crypto(props) {
             try {
                 setIsLoading(true);
                 let response = await axios.get(`${import.meta.env.VITE_API_URL}/getCryptoData?crypto=${crypto}&currency=${currency}`);
-                console.log(response["Realtime Currency Exchange Rate"])
-                setCryptoData((prevValue) => [...prevValue,response["Realtime Currency Exchange Rate"]]);
+                //console.log(response.data["Realtime Currency Exchange Rate"])
+                setCryptoData((prevValue) => [...prevValue,response.data["Realtime Currency Exchange Rate"]]);
 
                 crypto = "ETH"
                 response = await axios.get(`${import.meta.env.VITE_API_URL}/getCryptoData?crypto=${crypto}&currency=${currency}`);
-                setCryptoData((prevValue) => [...prevValue,response["Realtime Currency Exchange Rate"]]);
+                setCryptoData((prevValue) => [...prevValue,response.data["Realtime Currency Exchange Rate"]]);
 
-                crypto = "BNB"
-                response = await axios.get(`${import.meta.env.VITE_API_URL}/getCryptoData?crypto=${crypto}&currency=${currency}`);
-                setCryptoData((prevValue) => [...prevValue,response["Realtime Currency Exchange Rate"]]);
+                // crypto = "BNB"
+                // response = await axios.get(`${import.meta.env.VITE_API_URL}/getCryptoData?crypto=${crypto}&currency=${currency}`);
+                // setCryptoData((prevValue) => [...prevValue,response.data["Realtime Currency Exchange Rate"]]);
 
                 crypto = "SOL"
                 response = await axios.get(`${import.meta.env.VITE_API_URL}/getCryptoData?crypto=${crypto}&currency=${currency}`);
-                setCryptoData((prevValue) => [...prevValue,response["Realtime Currency Exchange Rate"]]);
+                setCryptoData((prevValue) => [...prevValue,response.data["Realtime Currency Exchange Rate"]]);
             }
             catch (e){
                 if(e.status !== 500) //if backend send 500 i've reach daily request limit
@@ -67,7 +67,7 @@ function Crypto(props) {
 
             <div className="flex justify-between">
                 <p className="font-bold text-4xl hover:text-red-700 cursor-pointer">Crypto</p>
-                {/*Last updated: {cryptoData[0]["6. Last Refreshed"]}*/}
+                Last updated: {cryptoData.length > 0 ? cryptoData[0]["6. Last Refreshed"] : "-"}
             </div>
 
             <div className="flex flex-row-reverse">
