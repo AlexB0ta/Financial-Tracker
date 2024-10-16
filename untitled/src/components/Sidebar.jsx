@@ -15,7 +15,7 @@ function Sidebar(props) {
                 </div>
                 <Link to="">
                     <div
-                        className="bg-gradient-to-r from-orange-800 to-purple-900 p-5 flex justify-between hover:text-lime-400 w-52 h-20 mt-10 items-center rounded-lg hover:shadow-2xl">
+                        className="bg-gradient-to-r from-orange-800 to-purple-900 p-5 flex justify-between hover:text-red-700 w-52 h-20 mt-10 items-center rounded-lg hover:shadow-2xl">
                         <div className="avatar">
                             <div className="w-12 h-12 rounded-full bg-white">
                                 <img src={`https://robohash.org/${localStorage.getItem('username')}.png`} alt="avatar-image"/>
