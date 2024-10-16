@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
-import * as res from "autoprefixer";
 import Loading from "../../pages/Loading.jsx";
 import ErrorFetching from "../../pages/ErrorFetching.jsx";
 import CryptoCard from "./CryptoCard.jsx";
@@ -21,17 +20,20 @@ function Crypto(props) {
     const currencyLogos = [usd,euro];
 
     useEffect(() => {
-        var crypto = "BTC";
+
         const fetchData = async () => {
+            let crypto = "BTC";
+            let auxCryptoData = [];
+
             try {
                 setIsLoading(true);
                 let response = await axios.get(`${import.meta.env.VITE_API_URL}/getCryptoData?crypto=${crypto}&currency=${currency}`);
                 //console.log(response.data["Realtime Currency Exchange Rate"])
-                setCryptoData((prevValue) => [...prevValue,response.data["Realtime Currency Exchange Rate"]]);
+                auxCryptoData.push(response.data["Realtime Currency Exchange Rate"]);
 
                 crypto = "ETH"
                 response = await axios.get(`${import.meta.env.VITE_API_URL}/getCryptoData?crypto=${crypto}&currency=${currency}`);
-                setCryptoData((prevValue) => [...prevValue,response.data["Realtime Currency Exchange Rate"]]);
+                auxCryptoData.push(response.data["Realtime Currency Exchange Rate"]);
 
                 // crypto = "BNB"
                 // response = await axios.get(`${import.meta.env.VITE_API_URL}/getCryptoData?crypto=${crypto}&currency=${currency}`);
@@ -39,7 +41,9 @@ function Crypto(props) {
 
                 crypto = "SOL"
                 response = await axios.get(`${import.meta.env.VITE_API_URL}/getCryptoData?crypto=${crypto}&currency=${currency}`);
-                setCryptoData((prevValue) => [...prevValue,response.data["Realtime Currency Exchange Rate"]]);
+                auxCryptoData.push(response.data["Realtime Currency Exchange Rate"]);
+
+                setCryptoData(auxCryptoData);
             }
             catch (e){
                 if(e.status !== 500) //if backend send 500 i've reach daily request limit
