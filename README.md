@@ -28,3 +28,51 @@ A web application that allows users to track their financial transactions, inclu
   - AlphaVantage API (for cryptocurrency/stocks exchange rates)
 - **Deployment**:
   - Render (for both frontend and backend deployment)
+
+## Running the Project Locally
+
+To set up and run the project locally, follow these steps:
+
+### Prerequisites
+
+Ensure you have the following installed:
+- **Node.js** (v14 or later)
+- **npm** (v6 or later)
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/financial-tracker.git
+cd financial-tracker
+```
+
+### 2. Set Up Environment Variables
+
+### 3. Install Dependencies
+Install the dependencies for both the frontend and backend:
+```bash
+npm install
+```
+
+### 4. Start the Backend Server
+```bash
+cd server
+node server.js
+```
+
+### 5. Start the Frontend Development Server
+In another terminal run:
+```bash
+cd client
+npm run dev
+```
+
+### 6. Access the Application
+Open your web browser and go to http://localhost:your_port to start using the Financial Tracker application.
+
+
+
+
+
+
+
+
