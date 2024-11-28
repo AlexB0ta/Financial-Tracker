@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import CardIncome from "../components/income/CardIncome.jsx";
 import CardTotal from "../components/CardTotal.jsx";
 import CardExpenses from "../components/expense/CardExpenses.jsx";
@@ -25,48 +25,51 @@ function Home() {
 
     useEffect(() => {
         const fetchTransactions = async () => {
-            try{
+            try {
                 setIsLoading(true);
-                const response = await axios.get(`${import.meta.env.VITE_API_URL}/getAllTransactions`,{withCredentials: true});
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/getAllTransactions`, {withCredentials: true});
                 //console.log(response);
                 setTotal(response.data.totalAmount);
                 setTotalIncome(response.data.totalIncome);
                 setTotalExpense(response.data.totalExpenses);
                 setTransactions(response.data.allTransactions);
-            }catch(e){
+            } catch (e) {
                 setIsError(true);
-                if(e.status === 401){
-                    navigate('/login',{state:{redirect: true}});
+                if (e.status === 401) {
+                    navigate('/login', {state: {redirect: true}});
                 }
-            }finally {
+            } finally {
                 setIsLoading(false);
             }
         }
 
         fetchTransactions();
-    },[])
+    }, [])
 
-     if(isError){
-         return <ErrorFetching />;
-     }
+    if (isError) {
+        return <ErrorFetching/>;
+    }
 
-    if(isLoading){
-        return <Loading />;
+    if (isLoading) {
+        return <Loading/>;
     }
 
 
     return (
         <div className="flex flex-col flex-grow">
-            <Navbar />
+            <div className="flex items-center">
+                <p className="text-3xl font-bold">Dashboard</p>
+                <Navbar/>
+            </div>
             <div className="w-full max-w-screen-lg mx-auto mt-14 pb-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <CardTotal amount={total} income={totalIncome} expenses={totalExpense} />
+                    <CardTotal amount={total} income={totalIncome} expenses={totalExpense}/>
                     <CardIncome amount={totalIncome}/>
                     <CardExpenses amount={totalExpense} income={totalIncome}/>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 my-10 mx-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 my-10">
                 {/* Table Card */}
                 <div className="card bg-base-200 shadow-xl p-6 hover:shadow-3xl">
                     <Table1 transactions={transactions}/>
@@ -77,7 +80,8 @@ function Home() {
                     <ChartComponent/>
                 </div>
             </div>
-            <Footer />
+
+            <Footer/>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Bar } from 'react-chartjs-2';
+import {Bar} from 'react-chartjs-2';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -58,17 +58,15 @@ const ChartComponent = () => {
                     const response = await axios.get(`${import.meta.env.VITE_API_URL}/getIncomesByDate?startDate=${startDate}&endDate=${endDate}&type=income`, {withCredentials: true});
                     const response2 = await axios.get(`${import.meta.env.VITE_API_URL}/getIncomesByDate?startDate=${startDate}&endDate=${endDate}&type=expense`, {withCredentials: true});
                     //console.log(response.data[0]);
-                    if(response.data[0] !== undefined) {
+                    if (response.data[0] !== undefined) {
                         allIncomes.push(response.data[0].amount);
-                    }
-                    else{
+                    } else {
                         allIncomes.push(0);
                     }
 
-                    if(response2.data[0] !== undefined) {
+                    if (response2.data[0] !== undefined) {
                         allExpenses.push(response2.data[0].amount);
-                    }
-                    else{
+                    } else {
                         allExpenses.push(0);
                     }
 
@@ -89,18 +87,20 @@ const ChartComponent = () => {
         fetchData();
     }, []);
 
-    if(isError){
-        return <ErrorFetching />
+    if (isError) {
+        return <ErrorFetching/>
     }
 
-    if(isLoading){
-        return <Loading />;
+    if (isLoading) {
+        return <div className="flex justify-center items-center">
+            <span className="loading loading-dots loading-lg"></span>
+        </div>;
     }
 
     console.log(profits)
     // Data for the chart
     const data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June','July','August','September','October','November','December'],
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         datasets: [
             {
                 type: 'bar',

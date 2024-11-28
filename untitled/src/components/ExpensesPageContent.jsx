@@ -12,6 +12,7 @@ import DeleteAlert from "./alerts/DeleteAlert.jsx";
 import EditExpenseForm from "./expense/EditExpenseForm.jsx";
 import ErrorFetching from "../pages/ErrorFetching.jsx";
 import Loading from "../pages/Loading.jsx";
+import PieChartIncome from "../components/income/PieChartIncome.jsx";
 
 function ExpensesPageContent(props) {
 
@@ -156,21 +157,26 @@ function ExpensesPageContent(props) {
         <div className="flex-grow drawer drawer-end">
             <input id="my-drawer" type="checkbox" className="drawer-toggle"/>
             <div className="drawer-content">
-                <Navbar/>
-                <div className="flex justify-center items-center gap-10 mt-10 p-6">
-                    <div className="flex flex-col gap-10">
+                <div className="flex items-center">
+                    <h1 className="text-3xl font-bold p-5">Expenses</h1>
+                    <Navbar/>
+                </div>
+
+                <div className="flex mt-14 justify-between px-20 items-center">
+                    <div className="flex flex-col gap-10 justify-center items-center">
                         {isSuccessAddEditDel ? <SuccessAlert onClose={() => {
                             setIsSuccessAddEditDel(false)
                         }}/> : null}
                         {isErrorAddEditDel ? <ErrorAlert onClose={() => {
                             setIsErrorAddEditDel(false)
                         }}/> : null}
-                        <h1 className="text-3xl font-bold text-center">Expenses</h1>
+
                         <CardExpenses amount={totalExpense} income={totalIncome}/>
+                        <PieChartIncome/>
                     </div>
 
-                    <div className="flex flex-col grow">
-                        <div className="bg-base-200 rounded-md p-2">
+                    <div className="flex flex-col w-2/3">
+                        <div className="bg-base-200 rounded-xl p-2">
                             <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400">Enter a
                                 new
                                 expense:</p>
@@ -190,7 +196,7 @@ function ExpensesPageContent(props) {
 
             {expToEdit !== null ?
                 <div className="drawer-side">
-                    <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
+                <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
                     <div className="bg-base-300 min-h-full w-6/12 p-4">
                         <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400 mt-10">Enter the
                             new
