@@ -49,6 +49,11 @@ function Sidebar(props) {
                     </a>
                 </li>
                 <li className="mb-2">
+                    <a href="/wallet" className="hover:bg-primary hover:text-white">
+                        <i className="fa-solid fa-wallet mr-2"></i> Wallet
+                    </a>
+                </li>
+                <li className="mb-2">
                     <a href="/profile" className="hover:bg-primary hover:text-white">
                         <i className="fas fa-user mr-2"></i> Profile
                     </a>

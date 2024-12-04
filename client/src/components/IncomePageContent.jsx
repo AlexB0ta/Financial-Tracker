@@ -12,6 +12,7 @@ import IncomeTable from "./income/IncomeTable.jsx";
 import Footer from "./Footer.jsx";
 import DeleteAlert from "./alerts/DeleteAlert.jsx";
 import EditIncomeForm from "./income/EditIncomeForm.jsx";
+import PieChartCategory from "./income/PieChartCategory.jsx";
 
 function IncomePageContent(props) {
 
@@ -55,6 +56,25 @@ function IncomePageContent(props) {
     if (isLoading) {
         return <Loading/>;
     }
+
+    const calculateCategoryPercentages = () => {
+        // Inițializăm un Map pentru a stoca totalul pe categorii
+        const categoryMap = new Map();
+
+        // Calculăm suma fiecărei categorii
+        incomes.forEach((income) => {
+            const currentTotal = categoryMap.get(income.category) || 0;
+            categoryMap.set(income.category, currentTotal + income.amount);
+        });
+
+        // Transformăm Map-ul într-un array de obiecte cu procentajul calculat
+        const percentages = Array.from(categoryMap.entries()).map(([category, amount]) => ({
+            title: category,
+            value: Math.round((amount / totalIncome) * 100),
+        }));
+
+        return percentages;
+    };
 
     async function addIncome(income) {
         try {
@@ -143,23 +163,31 @@ function IncomePageContent(props) {
         <div className="flex-grow drawer drawer-end">
             <input id="my-drawer" type="checkbox" className="drawer-toggle"/>
             <div className="drawer-content">
-                <Navbar/>
-                <div className="flex justify-center items-center gap-10 mt-10 p-6">
-                    <div className="flex flex-col gap-10">
+                <div className="flex items-center">
+                    <h1 className="text-3xl font-bold p-5">Incomes</h1>
+                    <Navbar/>
+                </div>
+
+                <div className="flex mt-14 justify-between px-20">
+                    <div className="flex flex-col gap-10 justify-center items-center">
                         {isSuccessAddEditDel && <SuccessAlert onClose={() => {
                             setIsSuccessAddEditDel(false)
                         }}/>}
                         {isErrorAddEditDel && <ErrorAlert onClose={() => {
                             setIsErrorAddEditDel(false)
                         }}/>}
-                        <h1 className="text-3xl font-bold text-center">Incomes</h1>
+
                         <CardIncome amount={totalIncome}/>
+                        <PieChartCategory data={calculateCategoryPercentages()}/>
+
                     </div>
 
-                    <div className="grow bg-base-200 rounded-md p-2">
-                        <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400">Enter a new
-                            income:</p>
-                        <AddIncomeForm addIncome={addIncome}/>
+                    <div className="flex flex-col w-2/3">
+                        <div className="bg-base-200 rounded-md p-2">
+                            <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400">Enter a new
+                                income:</p>
+                            <AddIncomeForm addIncome={addIncome}/>
+                        </div>
                     </div>
 
                 </div>
@@ -177,7 +205,8 @@ function IncomePageContent(props) {
                 <div className="drawer-side">
                     <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
                     <div className="bg-base-300 min-h-full w-6/12 p-4">
-                        <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400 mt-10">Enter the
+                        <p className="font-bold text-2xl text-center text-slate-200 hover:text-sky-400 mt-10">Enter
+                            the
                             new
                             income data:</p>
                         <EditIncomeForm editIncome={submitEdit} income={incomeToEdit}/>

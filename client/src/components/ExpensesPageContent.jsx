@@ -12,7 +12,7 @@ import DeleteAlert from "./alerts/DeleteAlert.jsx";
 import EditExpenseForm from "./expense/EditExpenseForm.jsx";
 import ErrorFetching from "../pages/ErrorFetching.jsx";
 import Loading from "../pages/Loading.jsx";
-import PieChartIncome from "../components/income/PieChartIncome.jsx";
+import PieChartCategory from "./income/PieChartCategory.jsx";
 
 function ExpensesPageContent(props) {
 
@@ -59,6 +59,25 @@ function ExpensesPageContent(props) {
     if (isLoading) {
         return <Loading />;
     }
+
+    const calculateCategoryPercentages = () => {
+        // Inițializăm un Map pentru a stoca totalul pe categorii
+        const categoryMap = new Map();
+
+        // Calculăm suma fiecărei categorii
+        expenses.forEach((expense) => {
+            const currentTotal = categoryMap.get(expense.category) || 0;
+            categoryMap.set(expense.category, currentTotal + expense.amount);
+        });
+
+        // Transformăm Map-ul într-un array de obiecte cu procentajul calculat
+        const percentages = Array.from(categoryMap.entries()).map(([category, amount]) => ({
+            title: category,
+            value: Math.round((amount / totalExpense) * 100),
+        }));
+
+        return percentages;
+    };
 
     async function addExpense(expense) {
         //console.log(expense);
@@ -162,7 +181,7 @@ function ExpensesPageContent(props) {
                     <Navbar/>
                 </div>
 
-                <div className="flex mt-14 justify-between px-20 items-center">
+                <div className="flex mt-14 justify-between px-20">
                     <div className="flex flex-col gap-10 justify-center items-center">
                         {isSuccessAddEditDel ? <SuccessAlert onClose={() => {
                             setIsSuccessAddEditDel(false)
@@ -172,7 +191,7 @@ function ExpensesPageContent(props) {
                         }}/> : null}
 
                         <CardExpenses amount={totalExpense} income={totalIncome}/>
-                        <PieChartIncome/>
+                        <PieChartCategory data={calculateCategoryPercentages()}/>
                     </div>
 
                     <div className="flex flex-col w-2/3">
