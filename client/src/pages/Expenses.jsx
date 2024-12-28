@@ -1,6 +1,6 @@
 import React from 'react';
 import Sidebar from "../components/Sidebar.jsx";
-import ExpensesPageContent from "../components/ExpensesPageContent.jsx";
+import ExpensesPageContent from "../components/expense/ExpensesPageContent.jsx";
 
 
 function Expenses(props) {

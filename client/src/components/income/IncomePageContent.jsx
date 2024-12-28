@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import ErrorFetching from "../pages/ErrorFetching.jsx";
-import Loading from "../pages/Loading.jsx";
-import Navbar from "./Navbar.jsx";
-import SuccessAlert from "./alerts/successAlert.jsx";
-import ErrorAlert from "./alerts/errorAlert.jsx";
-import CardIncome from "./income/CardIncome.jsx";
-import AddIncomeForm from "./income/AddIncomeForm.jsx";
-import IncomeTable from "./income/IncomeTable.jsx";
-import Footer from "./Footer.jsx";
-import DeleteAlert from "./alerts/DeleteAlert.jsx";
-import EditIncomeForm from "./income/EditIncomeForm.jsx";
-import PieChartCategory from "./income/PieChartCategory.jsx";
+import ErrorFetching from "../../pages/ErrorFetching.jsx";
+import Loading from "../../pages/Loading.jsx";
+import Navbar from "../Navbar.jsx";
+import SuccessAlert from "../alerts/successAlert.jsx";
+import ErrorAlert from "../alerts/errorAlert.jsx";
+import CardIncome from "./CardIncome.jsx";
+import AddIncomeForm from "./AddIncomeForm.jsx";
+import IncomeTable from "./IncomeTable.jsx";
+import Footer from "../Footer.jsx";
+import DeleteAlert from "../alerts/DeleteAlert.jsx";
+import EditIncomeForm from "./EditIncomeForm.jsx";
+import PieChartCategory from "../PieChartCategory.jsx";
 
 function IncomePageContent(props) {
 
@@ -57,6 +57,29 @@ function IncomePageContent(props) {
         return <Loading/>;
     }
 
+    const categoryColors = {
+        Salary: "#2c15f1",
+        Freelancing: "#5584bc",
+        Investments: "#dd2a2a",
+        Gifts: "#a1750c",
+        Other: "#e0dfe4",
+    };
+
+    function generateRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    incomes.forEach((income) => {
+        if (!(income.category in categoryColors)) {
+            categoryColors[income.category] = generateRandomColor();
+        }
+    })
+
     const calculateCategoryPercentages = () => {
         // Inițializăm un Map pentru a stoca totalul pe categorii
         const categoryMap = new Map();
@@ -71,6 +94,7 @@ function IncomePageContent(props) {
         const percentages = Array.from(categoryMap.entries()).map(([category, amount]) => ({
             title: category,
             value: Math.round((amount / totalIncome) * 100),
+            color: categoryColors[category],
         }));
 
         return percentages;
@@ -193,7 +217,7 @@ function IncomePageContent(props) {
                 </div>
 
                 <div className="bg-base-200 bg-opacity-90 shadow-xl my-14 mx-3 rounded-md">
-                    {<IncomeTable incomes={incomes} onEdit={handleEdit} onDelete={handleDeleteSubmit}
+                    {<IncomeTable incomes={incomes} colors={categoryColors} onEdit={handleEdit} onDelete={handleDeleteSubmit}
                                   onSort={handleSort}/>}
                 </div>
                 <Footer/>

@@ -1,6 +1,6 @@
 import React from 'react';
 import Sidebar from "../components/Sidebar.jsx";
-import IncomePageContent from "../components/IncomePageContent.jsx";
+import IncomePageContent from "../components/income/IncomePageContent.jsx";
 
 function Income(props) {
 

@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {response} from 'express';
 import bodyParser from 'body-parser';
 import 'dotenv/config'
 import {createClient} from '@supabase/supabase-js'
@@ -347,7 +347,8 @@ app.post('/addExpense', verifyToken, async (req, res) => {
             category: req.body.category,
             created_at: req.body.date,
             type: 'expense',
-            user_id: req.user.id
+            user_id: req.user.id,
+            recurring: req.body.recurring
         })
 
     return res.status(response.status).send();
@@ -465,6 +466,104 @@ app.get('/getCryptoData', async (req, res) => {
     }
 
     return res.status(200).send(response.data);
+})
+
+app.get('/getAllSavings', verifyToken, async (req, res) => {
+
+    const {data, error} = await supabase
+        .from('Savings')
+        .select()
+        .eq('user_id', req.user.id)
+
+
+    if (error) {
+        console.log(error)
+        return res.status(400).send();
+    }
+
+    return res.status(200).send(data);
+
+})
+
+app.post('/addSavingPlan', verifyToken,async (req, res) => {
+
+    //console.log(req.body);
+    const response = await supabase
+        .from('Savings')
+        .insert({
+            goal: req.body.goal,
+            amount: req.body.amount,
+            current_amount: 0,
+            user_id: req.user.id
+        })
+
+    return res.status(response.status).send();
+})
+
+app.delete('/deleteSavingPlan/:id', verifyToken, async (req, res) => {
+    const response = await supabase
+        .from('Savings')
+        .delete()
+        .eq('id', req.params.id)
+
+    return res.status(response.status).send();
+})
+
+app.patch('/updateSavingPlan', verifyToken, async (req, res) => {
+
+    const {error} = await supabase
+        .from('Savings')
+        .update({current_amount: req.body.newAmount})
+        .eq('id', req.body.id)
+
+    if (error)
+        return res.status(400).send();
+
+    return res.status(200).send();
+})
+
+app.get('/getAllRecurringPayments', verifyToken, async (req, res) => {
+
+    const {data, error} = await supabase
+        .from('Transactions')
+        .select('id, description, amount,category')
+        .eq('user_id', req.user.id)
+        .eq('recurring', true)
+
+    if (error) {
+        console.log(error)
+        return res.status(400).send();
+    }
+
+    return res.status(200).send(data);
+})
+
+app.post('/addRecurringPayment', verifyToken, async (req, res) => {
+
+    const response = await supabase
+        .from('Transactions')
+        .insert({
+            description: req.body.name,
+            amount: req.body.amount,
+            category: req.body.name,
+            created_at: new Date().toISOString(),
+            type: "expense",
+            user_id: req.user.id,
+            recurring: true
+        })
+
+    return res.status(response.status).send();
+})
+
+app.delete('/deleteRecurringPayment/:id',verifyToken, async (req, res) => {
+
+    //console.log(req.params);
+    const response = await supabase
+        .from('Transactions')
+        .delete()
+        .eq('id', req.params.id)
+
+    return res.status(response.status).send();
 })
 
 app.listen(port, function (err) {

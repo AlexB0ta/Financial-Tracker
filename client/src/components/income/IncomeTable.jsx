@@ -89,7 +89,13 @@ function IncomeTable(props) {
                         <th>{index + 1}</th>
                         <td>{income.description}</td>
                         <td>{income.amount}</td>
-                        <td>{income.category}</td>
+                        <td> <span
+                            style={{ backgroundColor: props.colors[income.category] }}
+                            className="inline-block rounded-full px-2 py-1 text-white"
+                            >
+                            {income.category}
+                            </span>
+                        </td>
                         <td>{formatDate(income.created_at)}</td>
                         <td>
                             <div className="dropdown dropdown-hover">

@@ -3,9 +3,11 @@ import axios from "axios";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck} from "@fortawesome/free-solid-svg-icons";
 import SavingPlanElement from "./SavingPlanElement.jsx";
+import {useNavigate} from "react-router-dom";
 
 function SavingPlanCard(props) {
 
+    const navigate = useNavigate();
     const [plans, setPlans] = React.useState([]);
     const [isMouseOver, setMouseOver] = useState(false);
     const [goal, setGoal] = useState("");
@@ -16,8 +18,12 @@ function SavingPlanCard(props) {
         const fetchData = async () => {
             try {
                 const res = await axios.get(`${import.meta.env.VITE_API_URL}/getAllSavings`, {withCredentials: true});
+                //console.log(res.data);
                 setPlans(res.data);
             } catch (err) {
+                if (err.status === 401) {
+                    navigate('/login', {state: {redirect: true}});
+                }
                 console.log(err);
             }
         }
@@ -26,16 +32,50 @@ function SavingPlanCard(props) {
     }, [dataRefresh]);
 
     async function addSavingPlan() {
+        document.getElementById("my_modal_2").close();
         try{
-            const res = axios.post(`${import.meta.env.VITE_API_URL}/addSavingPlan`, {withCredentials: true});
-            setDataRefresh(!dataRefresh);
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/addSavingPlan`, {goal, amount},{withCredentials: true});
         }catch (err){
             console.log(err);
+            if (err.status === 401) {
+                navigate('/login', {state: {redirect: true}});
+            }
+        }
+        finally {
+            setDataRefresh(!dataRefresh);
+        }
+    }
+
+    async function handleAddMoney(id, newAmount) {
+        try{
+            const res = await axios.patch(`${import.meta.env.VITE_API_URL}/updateSavingPlan`, {id, newAmount}, {withCredentials: true});
+        }
+        catch (err){
+            if (err.status === 401) {
+                navigate('/login', {state: {redirect: true}});
+            }
+            console.log(err);
+        }
+        finally {
+            setDataRefresh(!dataRefresh);
+        }
+    }
+
+    async function handleDelete(id) {
+        try{
+
+            const res = await axios.delete(`${import.meta.env.VITE_API_URL}/deleteSavingPlan/${id}`, {withCredentials: true});
+        }
+        catch(err){
+            console.log(err);
+        }
+        finally {
+            setDataRefresh(!dataRefresh);
         }
     }
 
     return (
-        <div className="bg-base-200 rounded-xl shadow-3xl">
+        <div className="bg-base-200 rounded-xl hover:shadow-3xl w-1/3">
 
             <div className="flex justify-between items-center">
                 <p className="font-bold text-lg">Saving plan</p>
@@ -72,7 +112,7 @@ function SavingPlanCard(props) {
             </div>
 
             {plans.length > 0 ? plans.map((plan, index) => (
-                <SavingPlanElement key={index} plan={plan} />
+                <SavingPlanElement key={index} plan={plan} onAddMoney={handleAddMoney} onDelete={handleDelete}/>
             )) : <div className="text-center">No plans to show!</div>}
 
         </div>

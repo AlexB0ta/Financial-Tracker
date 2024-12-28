@@ -1,18 +1,18 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import Navbar from "./Navbar.jsx";
-import SuccessAlert from "./alerts/successAlert.jsx";
-import ErrorAlert from "./alerts/errorAlert.jsx";
-import CardExpenses from "./expense/CardExpenses.jsx";
-import AddExpenseForm from "./expense/AddExpenseForm.jsx";
-import ExpensesTable from "./expense/ExpensesTable.jsx";
-import Footer from "./Footer.jsx";
-import DeleteAlert from "./alerts/DeleteAlert.jsx";
-import EditExpenseForm from "./expense/EditExpenseForm.jsx";
-import ErrorFetching from "../pages/ErrorFetching.jsx";
-import Loading from "../pages/Loading.jsx";
-import PieChartCategory from "./income/PieChartCategory.jsx";
+import Navbar from "../Navbar.jsx";
+import SuccessAlert from "../alerts/successAlert.jsx";
+import ErrorAlert from "../alerts/errorAlert.jsx";
+import CardExpenses from "./CardExpenses.jsx";
+import AddExpenseForm from "./AddExpenseForm.jsx";
+import ExpensesTable from "./ExpensesTable.jsx";
+import Footer from "../Footer.jsx";
+import DeleteAlert from "../alerts/DeleteAlert.jsx";
+import EditExpenseForm from "./EditExpenseForm.jsx";
+import ErrorFetching from "../../pages/ErrorFetching.jsx";
+import Loading from "../../pages/Loading.jsx";
+import PieChartCategory from "../PieChartCategory.jsx";
 
 function ExpensesPageContent(props) {
 
@@ -29,6 +29,8 @@ function ExpensesPageContent(props) {
     const [expToEdit, setExpToEdit] = useState(null);
     const [isSuccessAddEditDel, setIsSuccessAddEditDel] = useState(false);
     const [isErrorAddEditDel, setIsErrorAddEditDel] = useState(false);
+
+
 
 
     useEffect(() => {
@@ -60,6 +62,31 @@ function ExpensesPageContent(props) {
         return <Loading />;
     }
 
+    const categoryColors = {
+        Food: "#34D399",
+        Transportation: "#60A5FA",
+        Housing: "#F87171",
+        Entertainment: "#FBBF24",
+        Health: "#A78BFA",
+        Utilities: "#094509",
+        Other: "#ece8e8"
+    };
+
+    function generateRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    expenses.forEach(expense => {
+        if (!(expense.category in categoryColors)) {
+            categoryColors[expense.category] = generateRandomColor();
+        }
+    })
+
     const calculateCategoryPercentages = () => {
         // Inițializăm un Map pentru a stoca totalul pe categorii
         const categoryMap = new Map();
@@ -74,6 +101,7 @@ function ExpensesPageContent(props) {
         const percentages = Array.from(categoryMap.entries()).map(([category, amount]) => ({
             title: category,
             value: Math.round((amount / totalExpense) * 100),
+            color: categoryColors[category]
         }));
 
         return percentages;
@@ -205,7 +233,7 @@ function ExpensesPageContent(props) {
                 </div>
 
                 <div className="card bg-base-200 bg-opacity-90 shadow-xl my-5 mx-3 rounded-md">
-                    <ExpensesTable expenses={expenses} onEdit={handleEdit} onDelete={handleDeleteSubmit}
+                    <ExpensesTable expenses={expenses} colors={categoryColors} onEdit={handleEdit} onDelete={handleDeleteSubmit}
                                    onSort={handleSort}/>
                 </div>
                 <Footer/>

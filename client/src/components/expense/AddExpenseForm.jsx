@@ -8,6 +8,7 @@ function AddExpenseForm(props) {
     const [amount, setAmount] = useState(0);
     const [category, setCategory] = useState("");
     const [date, setDate] = useState("");
+    const [recurring, setRecurring] = useState(false);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -16,11 +17,12 @@ function AddExpenseForm(props) {
             return;
         }
 
-        props.addExpense({description, amount, category, date});
+        props.addExpense({description, amount, category, date, recurring});
         setDescription("");
         setAmount(0);
         setCategory("");
         setDate("");
+        setRecurring(false);
     }
 
     const [isMouseOver, setMouseOver] = useState(false);
@@ -89,6 +91,16 @@ function AddExpenseForm(props) {
                         onChange={(e) => setDate(e.target.value)}
                         className="input border p-2"
                     />
+                </label>
+            </div>
+            <div className="form-control w-48">
+                <label className="cursor-pointer label">
+                    <span className="label-text">Recurring payment?</span>
+                    <input
+                        type="checkbox"
+                        checked={recurring}
+                        onChange={(e) => setRecurring(e.target.checked)}
+                        className="checkbox [--chkbg:oklch(var(--a))] [--chkfg:oklch(var(--p))]"/>
                 </label>
             </div>
             <div className="flex justify-end">

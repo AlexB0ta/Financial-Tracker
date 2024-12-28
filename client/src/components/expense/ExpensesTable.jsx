@@ -8,6 +8,7 @@ function ExpensesTable(props) {
         return new Date(date).toLocaleDateString();
     }
 
+
     return (
         <div className="">
             <table className="table">
@@ -84,7 +85,14 @@ function ExpensesTable(props) {
                         {/*different from actual id in DATABASE*/}
                         <td>{expense.description}</td>
                         <td>{expense.amount}</td>
-                        <td>{expense.category}</td>
+                        <td>
+                            <span
+                                style={{backgroundColor: props.colors[expense.category]}}
+                                className="inline-block rounded-full px-2 py-1 text-white"
+                            >
+                                {expense.category}
+                            </span>
+                        </td>
                         <td>{formatDate(expense.created_at)}</td>
                         <td>
                             <div className="dropdown dropdown-hover">

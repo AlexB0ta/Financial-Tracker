@@ -1,6 +1,7 @@
 import React from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faServer} from "@fortawesome/free-solid-svg-icons";
+import login from "../pages/Login.jsx";
 
 function Table1(props) {
 
@@ -17,7 +18,6 @@ function Table1(props) {
                 {/* head */}
                 <thead>
                 <tr>
-                    {/*<th>iconita + -</th> */}
                     <th></th>
                     <th>Description</th>
                     <th>Amount</th>
@@ -26,14 +26,15 @@ function Table1(props) {
                 </thead>
                 <tbody>
                 {props.transactions.length > 0 ? props.transactions.map((transaction) => (
-                    <tr key={transaction.id}>
+                    <tr key={transaction.id}
+                        className={transaction.type === "income" ? "text-green-500" : "text-red-500"}>
                         <td>{transaction.id}</td>
                         <td>{transaction.description}</td>
                         <td>{transaction.amount}</td>
                         <td>{formatDate(transaction.created_at)}</td>
                     </tr>
                 )) : <tr>
-                    <td className="text-center"> No data to display!</td>
+                <td className="text-center"> No data to display!</td>
                 </tr>}
 
                 </tbody>

@@ -2,8 +2,12 @@ import React from 'react';
 import Sidebar from "../components/Sidebar.jsx";
 import SavingPlanCard from "../components/savings/SavingPlanCard.jsx";
 import Navbar from "../components/Navbar.jsx";
+import ReccPaymentCard from "../components/recurringPay/ReccPaymentCard.jsx";
+import SummaryCard from "../components/SummaryCard.jsx";
+import Footer from "../components/Footer.jsx";
 
 function Wallet(props) {
+
     return (
         <div className="flex">
 
@@ -11,7 +15,15 @@ function Wallet(props) {
             <div className="flex flex-col w-full">
                 <Navbar />
 
-                <SavingPlanCard className="w-1/3"/>
+                <div className="flex gap-3 ml-5">
+                    <SavingPlanCard className="w-1/3"/>
+
+                    <ReccPaymentCard />
+
+                    <SummaryCard />
+                </div>
+
+                <Footer />
             </div>
 
         </div>
