@@ -26,7 +26,7 @@ function SavingPlanElement(props) {
             </div>
 
             <div className="flex flex-col p-1">
-                <p>Saving: {props.plan.current_amount}</p>
+                <p className="text-lime-200">Saving: {props.plan.current_amount}</p>
                 <progress className="progress progress-warning"
                           value={props.plan.current_amount / props.plan.amount * 100} max="100"></progress>
             </div>

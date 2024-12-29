@@ -42,9 +42,10 @@ function InvestmentPage(props) {
 
     const handleQuizSubmit = () => {
         localStorage.setItem("hasVisitedInvestmentPage", "true");
+        localStorage.setItem("quizAnswers", JSON.stringify(quizAnswers));
         setIsFirst(false);
         setTabSelected(3); //redirect to advice page
-        console.log(quizAnswers);
+        //console.log(quizAnswers);
     };
 
     const handleInputChange = (e) => {
@@ -154,7 +155,7 @@ function InvestmentPage(props) {
                         <div className="flex flex-col gap-5 mb-11 px-10 ">
                             <div
                                 role="tablist"
-                                className="tabs tabs-boxed w-1/3 bg-base-200 bg-opacity-60"
+                                className="tabs tabs-boxed w-1/3 bg-base-200 bg-opacity-60 indicator"
                             >
                                 <a
                                     role="tab"
@@ -170,6 +171,7 @@ function InvestmentPage(props) {
                                 >
                                     Crypto
                                 </a>
+                                <span className="indicator-item badge badge-error">New</span>
                                 <a
                                     role="tab"
                                     className={`tab ${tabSelected === 3 && "tab-active"}`}

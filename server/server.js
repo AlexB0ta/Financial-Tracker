@@ -6,9 +6,8 @@ import cors from 'cors';
 import axios from 'axios';
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
-import data from "pg/lib/query.js";
 import cookieParser from "cookie-parser";
-import {schedule} from "node-cron";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 import path from "path";
 import {fileURLToPath} from 'url';
@@ -24,6 +23,7 @@ const supabase = createClient(process.env.DB_URL, process.env.DB_KEY);
 let incomeSum = 0;
 const API_KEY = process.env.ALPHA_API_KEY;
 const JWT_SECRET = process.env.JWT_SECRET;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -526,7 +526,7 @@ app.get('/getAllRecurringPayments', verifyToken, async (req, res) => {
 
     const {data, error} = await supabase
         .from('Transactions')
-        .select('id, description, amount,category')
+        .select('id, description, amount,category, created_at')
         .eq('user_id', req.user.id)
         .eq('recurring', true)
 
@@ -564,6 +564,33 @@ app.delete('/deleteRecurringPayment/:id',verifyToken, async (req, res) => {
         .eq('id', req.params.id)
 
     return res.status(response.status).send();
+})
+
+app.post('/getAiResponse', verifyToken, async (req, res) => {
+
+    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const quizAns = JSON.parse(req.body.data);
+
+    const chat = model.startChat({
+        history: [
+            {
+                role: "user",
+                parts: [{ text: "Hello" }],
+            },
+            {
+                role: "model",
+                parts: [{ text: "Great to meet you. What would you like to know?" }],
+            },
+        ],
+    });
+
+    let result = await chat.sendMessage("I want you to give me an answer about investment advice. I will give you my primary investment goal, How long I plan to invest and my risk tolerance");
+    //console.log(result.response.text());
+    let result2 = await chat.sendMessage(`My goal is ${quizAns.question1}, I plan to invest ${quizAns.question2} and my risk tolerance is ${quizAns.question3}. Make the answer about 125 words long and don't include disclaimers.`);
+    //console.log(result2.response.text());
+
+    return res.status(200).send(result2.response.text());
 })
 
 app.listen(port, function (err) {
