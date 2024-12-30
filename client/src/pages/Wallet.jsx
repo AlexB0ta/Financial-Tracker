@@ -16,7 +16,7 @@ function Wallet(props) {
                 <Navbar />
 
                 <div className="flex gap-3 ml-5">
-                    <SavingPlanCard className="w-1/3"/>
+                    <SavingPlanCard/>
 
                     <ReccPaymentCard />
 

@@ -28,7 +28,7 @@ function Profile(props) {
 
         try {
             setIsErrorEditDel(false);
-            const response = await axios.patch("http://localhost:8080/editUser", {
+            const response = await axios.patch(`${import.meta.env.VITE_API_URL}/editUser`, {
                 userName,
                 email
             }, {withCredentials: true});
@@ -40,7 +40,7 @@ function Profile(props) {
             setIsSuccessEditDel(false);
             setUserName(localStorage.getItem("username"));
             setEmail(localStorage.getItem("email"));
-            //console.log(err);
+            console.log(err);
         }
 
     }

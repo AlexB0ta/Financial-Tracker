@@ -3,9 +3,11 @@ import axios from "axios";
 import ErrorFetching from "../../pages/ErrorFetching.jsx";
 import Loading from "../../pages/Loading.jsx";
 import TableStocks from "./TableStocks.jsx";
+import {useNavigate} from "react-router-dom";
 
 function Stocks(props) {
 
+    const navigate = useNavigate();
     const [tabSelected, setTabSelected] = useState(1);
     const [topGainers, setTopGainers] = useState([]);
     const [topLosers, setTopLosers] = useState([]);
@@ -26,6 +28,9 @@ function Stocks(props) {
             } catch (e) {
                 if(e.status !== 500) //if backend send 500 i've reach daily request limit
                     setIsError(true);
+                if (e.status === 401) {
+                    navigate('/login', {state: {redirect: true}});
+                }
             } finally {
                 setIsLoading(false);
             }

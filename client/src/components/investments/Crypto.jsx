@@ -9,9 +9,11 @@ import eth from "/eth.png"
 import euro from "/euro.png"
 import sol from "/sol.png"
 import usd from "/usd.png"
+import {useNavigate} from "react-router-dom";
 
 function Crypto(props) {
 
+    const navigate = useNavigate();
     const [currency, setCurrency] = useState("USD");
     const [cryptoData, setCryptoData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -48,6 +50,9 @@ function Crypto(props) {
             catch (e){
                 if(e.status !== 500) //if backend send 500 i've reach daily request limit
                     setIsError(true);
+                if (e.status === 401) {
+                    navigate('/login', {state: {redirect: true}});
+                }
             }
             finally {
                 setIsLoading(false);
