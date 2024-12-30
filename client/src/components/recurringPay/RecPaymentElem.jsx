@@ -25,7 +25,11 @@ function RecPaymentElem(props) {
     }
 
     useEffect(() => {
-        setDueDate(processDate(props.payment.created_at))
+        const newDueDate = processDate(props.payment.created_at);
+        setDueDate(newDueDate);
+    }, []);
+
+    useEffect(() => {
         const checkDate =  async (dateString) => {
             const givenDate = new Date(dateString); // Parse the date
             const currentDate = new Date(); // Get the current date
@@ -55,7 +59,7 @@ function RecPaymentElem(props) {
 
         checkDate(dueDate);
         //setRender(true);
-    })
+    }, [dueDate]);
 
 
 
