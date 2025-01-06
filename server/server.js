@@ -593,8 +593,9 @@ app.post('/getAiAdvice', verifyToken, async (req, res) => {
     //console.log(result.response.text());
     let result2 = await chat.sendMessage(`My goal is ${quizAns.question1}, I plan to invest ${quizAns.question2} and my risk tolerance is ${quizAns.question3}. Make the answer about 70 words long and don't include disclaimers.`);
     //console.log(result2.response.text());
+    let result3 = await chat.sendMessage("Suggest me some further questions about the investments. For example: Would you like me to tell you some high yield bonds?");
 
-    return res.status(200).send(result2.response.text());
+    return res.status(200).send(result2.response.text() + result3.response.text());
 })
 
 app.post('/getAiResponse', verifyToken, async (req, res) => {
@@ -618,6 +619,31 @@ app.post('/getAiResponse', verifyToken, async (req, res) => {
     let result = await chat.sendMessage(askAI);
 
     return res.status(200).send(result.response.text())
+})
+
+app.get('/getVisitedInvestment', verifyToken, async (req, res) => {
+    const response = await supabase
+        .from('Users')
+        .select('has_Invested')
+        .eq('id', req.user.id)
+
+    console.log(response.data[0].has_Invested);
+    return res.status(200).send(response.data[0].has_Invested);
+})
+
+app.patch('/setHasVisitedInvestment', verifyToken, async (req, res) => {
+    console.log(req.body);
+    const {error} = await supabase
+        .from('Users')
+        .update({has_Invested: true})
+        .eq('id', req.user.id)
+
+    if (error) {
+        console.log(error);
+        return res.status(400).send('Update failed!')
+    }
+
+    return res.status(200).send()
 })
 
 

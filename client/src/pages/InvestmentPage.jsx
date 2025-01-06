@@ -7,8 +7,11 @@ import Crypto from "../components/investments/Crypto.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeft, faArrowRight} from "@fortawesome/free-solid-svg-icons";
 import AdviceContent from "../components/investments/AdviceContent.jsx";
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 function InvestmentPage(props) {
+    const navigate = useNavigate();
     const [tabSelected, setTabSelected] = useState(1);
     const [isFirst, setIsFirst] = useState(true);
     const [quizAnswers, setQuizAnswers] = useState({
@@ -20,10 +23,23 @@ function InvestmentPage(props) {
 
     useEffect(() => {
         // Check if the user has already completed the quiz
-        const hasVisited = localStorage.getItem("hasVisitedInvestmentPage");
-        if (hasVisited) {
-            setIsFirst(false);
+        const checkVisited = async () => {
+            try {
+                const hasVisited = await axios.get(`${import.meta.env.VITE_API_URL}/getVisitedInvestment`, {withCredentials: true});
+                //console.log(hasVisited.data)
+                if (hasVisited.data === true) {
+                    setIsFirst(false);
+                }
+            }
+            catch (e){
+                if (e.status === 401) {
+                    navigate('/login', {state: {redirect: true}});
+                }
+                console.log(e);
+            }
         }
+
+        checkVisited();
     }, []);
 
     const handleNext = () => {
@@ -40,12 +56,11 @@ function InvestmentPage(props) {
         }
     }
 
-    const handleQuizSubmit = () => {
-        localStorage.setItem("hasVisitedInvestmentPage", "true");
+    const handleQuizSubmit = async () => {
         localStorage.setItem("quizAnswers", JSON.stringify(quizAnswers));
         setIsFirst(false);
         setTabSelected(3); //redirect to advice page
-        //console.log(quizAnswers);
+        await axios.patch(`${import.meta.env.VITE_API_URL}/setHasVisitedInvestment`, {},{withCredentials: true});
     };
 
     const handleInputChange = (e) => {
