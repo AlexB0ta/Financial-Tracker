@@ -11,6 +11,9 @@ A web application that allows users to track their financial transactions, inclu
 - **Interactive Charts**: Bar and line charts for visualizing income, expenses, and net profit over time, built with Chart.js.
 - **Data Persistence**: Transactions and data stored in a Supabase database.
 - **API Integration**: Fetch live data from external APIs (AlphaVantage) for real-time currency exchange rates.
+- **Recurring Payment Alerts**: Automatically send reminders for upcoming recurring payments, ensuring users never miss a due date.
+- **Budget Management**: Set and manage budgets to save funds for specific goals or expenses, giving users better financial control.
+- **Investment Profile and AI Advisor**: Get real-time advice through an AI-powered chatbot to identify the best investment options based on the user's goals and preferences.
 
 ## Tech Stack
 
